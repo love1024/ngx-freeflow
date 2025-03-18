@@ -11,16 +11,17 @@ import { BlockStyleSheet } from '../../shared/interfaces/stylesheet.interface';
 import { TreeManagerService } from '../../core/services/tree-manager.service';
 
 @Component({
-  selector: 'lib-block',
+  // eslint-disable-next-line @angular-eslint/component-selector
+  selector: '[fl-block]',
   imports: [],
   templateUrl: './block.component.html',
   styleUrl: './block.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    'attr.width': 'hostWidth()',
-    'attr.height': 'hostHeight()',
-    'attr.x': 'hostX()',
-    'attr.y': 'hostY()',
+    '[attr.width]': 'hostWidth()',
+    '[attr.height]': 'hostHeight()',
+    '[attr.x]': 'hostX()',
+    '[attr.y]': 'hostY()',
   },
 })
 export class BlockComponent implements OnInit {

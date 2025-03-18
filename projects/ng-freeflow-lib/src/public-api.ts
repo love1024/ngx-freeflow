@@ -2,5 +2,5 @@
  * Public API Surface of ng-freeflow-lib
  */
 
-export * from './lib/ng-freeflow-lib.service';
-export * from './lib/ng-freeflow-lib.component';
+export * from './lib/components/block/block.component';
+export * from './lib/shared/interfaces/stylesheet.interface';
