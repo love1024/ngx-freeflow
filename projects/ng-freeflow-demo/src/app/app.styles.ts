@@ -1,9 +1,11 @@
-import { BlockStyleSheet } from 'ng-freeflow-lib';
+import { BlockStyleSheet, RootStyleSheet } from 'ng-freeflow-lib';
 
 export const styles = {
+  root: {
+    width: 200,
+  } satisfies RootStyleSheet,
   container: {
     width: 200,
-    height: 50,
     borderRadius: 5,
     backgroundColor: '#f2f2f2',
     marginBottom: 10,

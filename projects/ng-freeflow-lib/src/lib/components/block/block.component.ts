@@ -1,84 +1,71 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
+  forwardRef,
   inject,
   input,
   OnInit,
+  Optional,
+  Signal,
   signal,
+  SkipSelf,
 } from '@angular/core';
-import { BlockStyleSheet } from '../../shared/interfaces/stylesheet.interface';
-import { TreeManagerService } from '../../core/services/tree-manager.service';
+import { BlockStyleSheet } from '../../core/interfaces/stylesheet.interface';
+import { DocTreeBuilderService } from '../../core/services/doc-tree-builder.service';
+import { DocViewComponent } from '../doc-view/doc-view.component';
+import { BlockViewModel } from '../../core/models/block-view.model';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
-  selector: '[fl-block]',
+  selector: '[ff-block]',
   imports: [],
   templateUrl: './block.component.html',
   styleUrl: './block.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[attr.width]': 'hostWidth()',
-    '[attr.height]': 'hostHeight()',
-    '[attr.x]': 'hostX()',
-    '[attr.y]': 'hostY()',
+    '[attr.width]': 'model().width',
+    '[attr.height]': 'model().height',
+    '[attr.x]': 'model().x',
+    '[attr.y]': 'model().y',
   },
+  providers: [
+    {
+      provide: DocViewComponent,
+      useExisting: forwardRef(() => BlockComponent),
+    },
+  ],
 })
 export class BlockComponent implements OnInit {
   styleSheet = input.required<BlockStyleSheet>();
 
-  hostWidth = signal(0);
-  hostHeight = signal(0);
-  hostX = signal(0);
-  hostY = signal(0);
-
-  protected width = signal(0);
-  protected height = signal(0);
-  protected x = signal(0);
-  protected y = signal(0);
+  protected model!: Signal<BlockViewModel>;
   protected radiusX = signal(0);
   protected fillColor = signal('');
 
-  protected marginBottom = signal(0);
+  private treeManager = inject(DocTreeBuilderService);
 
-  private get host() {
-    return this.hostRef.nativeElement;
+  constructor(@SkipSelf() @Optional() private parent: DocViewComponent) {
+    if (!this.parent) {
+      throw new Error('block must not be used outside of doc root');
+    }
   }
-
-  private hostRef = inject(ElementRef);
-  private treeManager = inject(TreeManagerService);
 
   ngOnInit(): void {
-    this.hostWidth.set(this.styleSheet().width);
-    this.width.set(this.styleSheet().width);
-
-    this.hostHeight.set(this.styleSheet().height);
-    this.height.set(this.styleSheet().height);
-
-    this.hostY.set(this.getElementY());
-
-    this.marginBottom.set(this.styleSheet().marginBottom);
+    this.model = signal(this.createModel());
 
     this.fillColor.set(this.styleSheet().backgroundColor);
-
     this.radiusX.set(this.styleSheet().borderRadius);
-
-    this.treeManager.register(this.host, this);
   }
 
-  private getElementY() {
-    const prevSibling = this.host.previousSibling as Element | null;
+  private createModel() {
+    const model = new BlockViewModel(this, this.styleSheet());
 
-    if (this.treeManager.has(prevSibling)) {
-      const prevComponent = this.treeManager.get(prevSibling)!;
+    const parent = this.treeManager.getByComponent(this.parent);
+    model.parent = parent;
+    parent.children.push(model);
 
-      return (
-        prevComponent.y() +
-        prevComponent.height() +
-        prevComponent.marginBottom()
-      );
-    }
+    this.treeManager.register(model);
 
-    return 0;
+    return model;
   }
 }

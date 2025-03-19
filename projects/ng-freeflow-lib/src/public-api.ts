@@ -3,4 +3,5 @@
  */
 
 export * from './lib/components/block/block.component';
-export * from './lib/shared/interfaces/stylesheet.interface';
+export * from './lib/components/root/root.component';
+export * from './lib/core/interfaces/stylesheet.interface';

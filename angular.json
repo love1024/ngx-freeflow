@@ -7,7 +7,7 @@
       "projectType": "library",
       "root": "projects/ng-freeflow-lib",
       "sourceRoot": "projects/ng-freeflow-lib/src",
-      "prefix": "lib",
+      "prefix": "ff",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
@@ -28,10 +28,7 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "tsConfig": "projects/ng-freeflow-lib/tsconfig.spec.json",
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ]
+            "polyfills": ["zone.js", "zone.js/testing"]
           }
         },
         "lint": {
@@ -55,7 +52,7 @@
       },
       "root": "projects/ng-freeflow-demo",
       "sourceRoot": "projects/ng-freeflow-demo/src",
-      "prefix": "app",
+      "prefix": "ffd",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
@@ -63,9 +60,7 @@
             "outputPath": "dist/ng-freeflow-demo",
             "index": "projects/ng-freeflow-demo/src/index.html",
             "browser": "projects/ng-freeflow-demo/src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "projects/ng-freeflow-demo/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -74,9 +69,7 @@
                 "input": "projects/ng-freeflow-demo/public"
               }
             ],
-            "styles": [
-              "projects/ng-freeflow-demo/src/styles.scss"
-            ],
+            "styles": ["projects/ng-freeflow-demo/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -121,10 +114,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
+            "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "projects/ng-freeflow-demo/tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -133,9 +123,7 @@
                 "input": "projects/ng-freeflow-demo/public"
               }
             ],
-            "styles": [
-              "projects/ng-freeflow-demo/src/styles.scss"
-            ],
+            "styles": ["projects/ng-freeflow-demo/src/styles.scss"],
             "scripts": []
           }
         },
@@ -153,8 +141,6 @@
     }
   },
   "cli": {
-    "schematicCollections": [
-      "angular-eslint"
-    ]
+    "schematicCollections": ["angular-eslint"]
   }
 }

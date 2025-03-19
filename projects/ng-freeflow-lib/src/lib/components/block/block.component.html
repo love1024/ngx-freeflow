@@ -1,8 +1,8 @@
 <svg:rect
-  [attr.width]="width()"
-  [attr.height]="height()"
-  [attr.x]="x()"
-  [attr.y]="y()"
+  [attr.width]="model().width"
+  [attr.height]="model().height"
+  [attr.x]="0"
+  [attr.y]="0"
   [attr.rx]="radiusX()"
   [attr.fill]="fillColor()"></svg:rect>
 <ng-content></ng-content>
