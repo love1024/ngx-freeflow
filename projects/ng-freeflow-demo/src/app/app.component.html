@@ -1,15 +1,19 @@
 <h1>SVG</h1>
-<svg width="200" height="170">
-  <svg ff-root [styleSheet]="svgStyles.root">
-    <svg ff-block [styleSheet]="svgStyles.container">
-      <svg ff-block [styleSheet]="svgStyles.innerContainer"></svg>
-    </svg>
-    <svg ff-block [styleSheet]="svgStyles.container">
-      <svg ff-block [styleSheet]="svgStyles.innerContainer"></svg>
-      <svg ff-block [styleSheet]="svgStyles.innerContainer"></svg>
+<svg ff-root [styleSheet]="svgStyles.root">
+  <svg ff-block [styleSheet]="svgStyles.container">
+    <svg ff-block [styleSheet]="svgStyles.innerContainer">
+      <!-- <foreignObject ff-html>
+        <div>This is some HTML</div>
+      </foreignObject> -->
+      <svg ff-block [styleSheet]="svgStyles.deepestContainer"></svg>
     </svg>
   </svg>
+  <svg ff-block [styleSheet]="svgStyles.container">
+    <svg ff-block [styleSheet]="svgStyles.innerContainer"></svg>
+    <svg ff-block [styleSheet]="svgStyles.innerContainer"></svg>
+  </svg>
 </svg>
+
 <h1>HTML</h1>
 
 <div class="container">

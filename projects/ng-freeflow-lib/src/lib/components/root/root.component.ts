@@ -17,7 +17,7 @@ import { RootStyleSheet } from '../../../public-api';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
-  selector: '[ff-root]',
+  selector: 'svg[ff-root]',
   imports: [],
   templateUrl: './root.component.html',
   styleUrl: './root.component.css',
