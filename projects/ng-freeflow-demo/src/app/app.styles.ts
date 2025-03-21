@@ -10,7 +10,7 @@ export const styles = {
     marginTop: 5,
     marginBottom: 10,
   } satisfies ContainerStyleSheet,
-  innerContainer: {
+  htmlContainer: {
     height: 40,
     borderRadius: 5,
     backgroundColor: '#0000ff',
@@ -18,6 +18,15 @@ export const styles = {
     marginBottom: 10,
     marginRight: 5,
     marginLeft: 5,
+  } satisfies ContainerStyleSheet,
+  emptyContainer: {
+    height: 40,
+    borderRadius: 5,
+    backgroundColor: '#0000ff',
+    marginLeft: 5,
+    marginRight: 5,
+    marginTop: 10,
+    marginBottom: 10,
   } satisfies ContainerStyleSheet,
   deepestContainer: {
     height: 20,

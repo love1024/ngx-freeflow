@@ -1,16 +1,16 @@
 <h1>SVG</h1>
 <svg ff-root [styleSheet]="svgStyles.root">
-  <svg ff-block [styleSheet]="svgStyles.container">
-    <svg ff-block [styleSheet]="svgStyles.innerContainer">
-      <!-- <foreignObject ff-html>
+  <svg ff-container [styleSheet]="svgStyles.container">
+    <svg ff-container [styleSheet]="svgStyles.htmlContainer">
+      <foreignObject ff-html>
         <div>This is some HTML</div>
-      </foreignObject> -->
-      <svg ff-block [styleSheet]="svgStyles.deepestContainer"></svg>
+      </foreignObject>
+      <!-- <svg ff-block [styleSheet]="svgStyles.deepestContainer"></svg> -->
     </svg>
   </svg>
-  <svg ff-block [styleSheet]="svgStyles.container">
-    <svg ff-block [styleSheet]="svgStyles.innerContainer"></svg>
-    <svg ff-block [styleSheet]="svgStyles.innerContainer"></svg>
+  <svg ff-container [styleSheet]="svgStyles.container">
+    <svg ff-container [styleSheet]="svgStyles.emptyContainer"></svg>
+    <svg ff-container [styleSheet]="svgStyles.emptyContainer"></svg>
   </svg>
 </svg>
 

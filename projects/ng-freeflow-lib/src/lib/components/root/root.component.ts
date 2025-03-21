@@ -10,7 +10,7 @@ import {
   signal,
   Signal,
 } from '@angular/core';
-import { DocTreeBuilderService } from '../../core/services/doc-tree-builder.service';
+
 import { RootViewModel } from '../../core/models/root-view.model';
 import { DocViewComponent } from '../doc-view/doc-view.component';
 import { RootStyleSheet } from '../../../public-api';
@@ -20,7 +20,6 @@ import { RootStyleSheet } from '../../../public-api';
   selector: 'svg[ff-root]',
   imports: [],
   templateUrl: './root.component.html',
-  styleUrl: './root.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[attr.width]': 'model().width',
@@ -33,21 +32,28 @@ import { RootStyleSheet } from '../../../public-api';
     },
   ],
 })
-export class RootComponent implements OnInit, AfterContentInit {
+export class RootComponent
+  extends DocViewComponent
+  implements OnInit, AfterContentInit
+{
   styleSheet = input.required<RootStyleSheet>();
+
+  protected parent = null;
 
   model!: Signal<RootViewModel>;
 
-  private treeManager = inject(DocTreeBuilderService);
   private cd = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
-    this.model = signal(new RootViewModel(this, this.styleSheet()));
-    this.treeManager.register(this.model());
+    this.model = signal(this.createModel());
   }
 
   ngAfterContentInit(): void {
     this.treeManager.root?.calculateLayout();
     this.cd.markForCheck();
+  }
+
+  protected modelFactory(): RootViewModel {
+    return new RootViewModel(this, this.styleSheet());
   }
 }

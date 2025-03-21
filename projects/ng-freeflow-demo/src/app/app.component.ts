@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {
-  BlockComponent,
+  ContainerComponent,
   HtmlBlockComponent,
   RootComponent,
 } from 'ng-freeflow-lib';
@@ -8,7 +8,7 @@ import { styles } from './app.styles';
 
 @Component({
   selector: 'ffd-root',
-  imports: [BlockComponent, RootComponent, HtmlBlockComponent],
+  imports: [ContainerComponent, RootComponent, HtmlBlockComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })

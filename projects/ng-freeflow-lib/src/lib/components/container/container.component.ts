@@ -1,6 +1,8 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
+  DestroyRef,
   forwardRef,
   inject,
   input,
@@ -11,17 +13,16 @@ import {
   SkipSelf,
 } from '@angular/core';
 import { ContainerStyleSheet } from '../../core/interfaces/stylesheet.interface';
-import { DocTreeBuilderService } from '../../core/services/doc-tree-builder.service';
 import { DocViewComponent } from '../doc-view/doc-view.component';
 import { BlockViewModel } from '../../core/models/block-view.model';
 import { ContainerViewModel } from '../../core/models/container-view.model';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
-  selector: 'svg[ff-block]',
+  selector: 'svg[ff-container]',
   imports: [],
-  templateUrl: './block.component.html',
-  styleUrl: './block.component.css',
+  templateUrl: './container.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[attr.width]': 'model().width',
@@ -32,20 +33,21 @@ import { ContainerViewModel } from '../../core/models/container-view.model';
   providers: [
     {
       provide: DocViewComponent,
-      useExisting: forwardRef(() => BlockComponent),
+      useExisting: forwardRef(() => ContainerComponent),
     },
   ],
 })
-export class BlockComponent implements OnInit {
+export class ContainerComponent extends DocViewComponent implements OnInit {
   styleSheet = input.required<ContainerStyleSheet>();
 
   protected model!: Signal<BlockViewModel>;
-  protected radiusX = signal(0);
-  protected fillColor = signal('');
 
-  private treeManager = inject(DocTreeBuilderService);
+  private cd = inject(ChangeDetectorRef);
+  private destroyRef = inject(DestroyRef);
 
-  constructor(@SkipSelf() @Optional() private parent: DocViewComponent) {
+  constructor(@SkipSelf() @Optional() protected parent: DocViewComponent) {
+    super();
+
     if (!this.parent) {
       throw new Error('block must not be used outside of doc root');
     }
@@ -54,19 +56,18 @@ export class BlockComponent implements OnInit {
   ngOnInit(): void {
     this.model = signal(this.createModel());
 
-    this.fillColor.set(this.styleSheet().backgroundColor);
-    this.radiusX.set(this.styleSheet().borderRadius);
+    this.subscribeToViewUpdates();
   }
 
-  private createModel() {
-    const model = new ContainerViewModel(this, this.styleSheet());
+  private subscribeToViewUpdates(): void {
+    this.model()
+      .viewUpdate.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.cd.markForCheck();
+      });
+  }
 
-    const parent = this.treeManager.getByComponent(this.parent);
-    model.parent = parent;
-    parent.children.push(model);
-
-    this.treeManager.register(model);
-
-    return model;
+  protected modelFactory(): ContainerViewModel {
+    return new ContainerViewModel(this, this.styleSheet());
   }
 }

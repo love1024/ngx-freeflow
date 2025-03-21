@@ -1,11 +1,29 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Directive, inject, Signal } from '@angular/core';
+import { AnyViewModel } from '../../core/models/any-view.model';
+import { DocTreeBuilderService } from '../../core/services/doc-tree-builder.service';
 
-@Component({
-  // eslint-disable-next-line @angular-eslint/component-selector
-  selector: 'ff-doc-view',
-  imports: [],
-  templateUrl: './doc-view.component.html',
-  styleUrl: './doc-view.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class DocViewComponent {}
+@Directive()
+export abstract class DocViewComponent {
+  protected abstract model: Signal<AnyViewModel>;
+
+  protected abstract parent: DocViewComponent | null;
+
+  protected abstract modelFactory(): AnyViewModel;
+
+  protected treeManager = inject(DocTreeBuilderService);
+
+  protected createModel<T extends AnyViewModel>(): T {
+    const model = this.modelFactory() as T;
+
+    const parent = this.treeManager.getByComponent(this.parent!);
+
+    if (parent) {
+      model.parent = parent;
+      parent.children.push(model);
+    }
+
+    this.treeManager.register(model);
+
+    return model;
+  }
+}

@@ -19,4 +19,8 @@ export class DocTreeBuilderService {
   getByComponent(component: DocViewComponent): AnyViewModel {
     return this.componentMap.get(component)!;
   }
+
+  calculateLayout(): void {
+    this.root?.calculateLayout();
+  }
 }

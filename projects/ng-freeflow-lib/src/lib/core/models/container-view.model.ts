@@ -1,4 +1,4 @@
-import { BlockComponent } from '../../../public-api';
+import { DocViewComponent } from '../../components/doc-view/doc-view.component';
 import { ContainerStyleSheet } from '../interfaces/stylesheet.interface';
 import { BlockViewModel } from './block-view.model';
 
@@ -17,10 +17,10 @@ const styleSheetWithDefaults = (
 };
 
 export class ContainerViewModel extends BlockViewModel {
-  public readonly styleSheet: Required<ContainerStyleSheet>;
+  public styleSheet: Required<ContainerStyleSheet>;
 
   constructor(
-    public readonly component: BlockComponent,
+    public component: DocViewComponent,
     styleSheet: ContainerStyleSheet
   ) {
     super();

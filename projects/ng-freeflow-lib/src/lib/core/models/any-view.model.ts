@@ -1,7 +1,12 @@
+import { Subject } from 'rxjs';
 import { DocViewComponent } from '../../components/doc-view/doc-view.component';
 import { StyleSheet } from '../interfaces/stylesheet.interface';
 
 export abstract class AnyViewModel {
+  private _viewUpdate$ = new Subject<void>();
+
+  public viewUpdate = this._viewUpdate$.asObservable();
+
   public parent: AnyViewModel | null = null;
   public children: AnyViewModel[] = [];
 
@@ -12,4 +17,8 @@ export abstract class AnyViewModel {
   public abstract styleSheet: StyleSheet;
 
   public abstract calculateLayout(): void;
+
+  public updateView(): void {
+    this._viewUpdate$.next();
+  }
 }

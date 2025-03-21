@@ -1,6 +1,6 @@
 <svg:rect
   [attr.width]="model().width"
   [attr.height]="model().height"
-  [attr.rx]="radiusX()"
-  [attr.fill]="fillColor()"></svg:rect>
+  [attr.rx]="styleSheet().borderRadius"
+  [attr.fill]="styleSheet().backgroundColor"></svg:rect>
 <ng-content></ng-content>

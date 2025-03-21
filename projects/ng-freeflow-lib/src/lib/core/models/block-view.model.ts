@@ -17,20 +17,6 @@ const flatToRoot = (startModel: AnyViewModel): AnyViewModel[] => {
   return chain.reverse();
 };
 
-const styleSheetWithDefaults = (
-  styleSheet: BlockStyleSheet
-): Required<BlockStyleSheet> => {
-  return {
-    width: 0,
-    height: 0,
-    marginBottom: 0,
-    marginTop: 0,
-    marginLeft: 0,
-    marginRight: 0,
-    ...styleSheet,
-  };
-};
-
 export abstract class BlockViewModel extends AnyViewModel {
   public width = 0;
   public height = 0;
@@ -42,30 +28,41 @@ export abstract class BlockViewModel extends AnyViewModel {
   calculateLayout() {
     this.children.forEach(c => c.calculateLayout());
 
-    this.setPosition();
-    this.setHeight();
-    this.setWidth();
+    this.calculatePosition();
+    this.calculateHeight();
+    this.calculateWidth();
+
+    this.updateView();
   }
 
-  protected setPosition() {
+  public setHeight(height: number) {
+    this.styleSheet.height = height;
+  }
+
+  protected calculatePosition() {
     if (!this.parent) return;
 
     const prevSibling =
       this.parent.children[this.parent.children.indexOf(this) - 1];
 
-    // Add own margin top
-    this.y += this.styleSheet.marginTop;
-    this.x += this.styleSheet.marginLeft;
+    let x = 0;
+    let y = 0;
+
+    y += this.styleSheet.marginTop;
+    x += this.styleSheet.marginLeft;
 
     if (prevSibling && prevSibling instanceof BlockViewModel) {
-      this.y +=
+      y +=
         prevSibling.y +
         prevSibling.height +
         prevSibling.styleSheet.marginBottom;
     }
+
+    this.x = x;
+    this.y = y;
   }
 
-  public setWidth() {
+  protected calculateWidth() {
     if (this.styleSheet.width) {
       this.width = this.styleSheet.width;
     } else {
@@ -83,7 +80,7 @@ export abstract class BlockViewModel extends AnyViewModel {
     }
   }
 
-  public setHeight() {
+  protected calculateHeight() {
     if (this.styleSheet.height) {
       this.height = this.styleSheet.height;
     } else {
