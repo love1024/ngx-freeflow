@@ -1,7 +1,7 @@
 <h1>SVG</h1>
 <svg ff-root [styleSheet]="svgStyles.root">
   <svg ff-container [styleSheet]="svgStyles.container">
-    <svg ff-container [styleSheet]="svgStyles.htmlContainer">
+    <svg ff-container [styleSheet]="svgStyles.resizeableContainer">
       <foreignObject ff-html>
         <div>This is some HTML</div>
       </foreignObject>
@@ -9,7 +9,12 @@
     </svg>
   </svg>
   <svg ff-container [styleSheet]="svgStyles.container">
-    <svg ff-container [styleSheet]="svgStyles.emptyContainer"></svg>
+    <svg ff-container [styleSheet]="svgStyles.resizeableContainer">
+      <svg:svg
+        ff-image
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/PNG_transparency_demonstration_1.png/548px-PNG_transparency_demonstration_1.png"
+        [styleSheet]="svgStyles.image"></svg:svg>
+    </svg>
     <svg ff-container [styleSheet]="svgStyles.emptyContainer"></svg>
   </svg>
 </svg>

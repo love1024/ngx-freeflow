@@ -1,4 +1,8 @@
-import { RootStyleSheet, ContainerStyleSheet } from 'ng-freeflow-lib';
+import {
+  RootStyleSheet,
+  ContainerStyleSheet,
+  ImageStyleSheet,
+} from 'ng-freeflow-lib';
 
 export const styles = {
   root: {
@@ -10,7 +14,7 @@ export const styles = {
     marginTop: 5,
     marginBottom: 10,
   } satisfies ContainerStyleSheet,
-  htmlContainer: {
+  resizeableContainer: {
     height: 40,
     borderRadius: 5,
     backgroundColor: '#0000ff',
@@ -28,6 +32,9 @@ export const styles = {
     marginTop: 10,
     marginBottom: 10,
   } satisfies ContainerStyleSheet,
+  image: {
+    height: 40,
+  } satisfies ImageStyleSheet,
   deepestContainer: {
     height: 20,
     borderRadius: 5,
