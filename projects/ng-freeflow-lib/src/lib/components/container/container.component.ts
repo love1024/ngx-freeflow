@@ -14,7 +14,6 @@ import {
 } from '@angular/core';
 import { ContainerStyleSheet } from '../../core/interfaces/stylesheet.interface';
 import { DocViewComponent } from '../doc-view/doc-view.component';
-import { BlockViewModel } from '../../core/models/block-view.model';
 import { ContainerViewModel } from '../../core/models/container-view.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -40,7 +39,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class ContainerComponent extends DocViewComponent implements OnInit {
   styleSheet = input.required<ContainerStyleSheet>();
 
-  protected model!: Signal<BlockViewModel>;
+  protected model!: Signal<ContainerViewModel>;
 
   private cd = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);

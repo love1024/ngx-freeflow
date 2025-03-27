@@ -15,14 +15,31 @@ export const styles = {
     marginBottom: 10,
   } satisfies ContainerStyleSheet,
   resizeableContainer: {
-    height: 40,
+    width: 80,
     borderRadius: 5,
     backgroundColor: '#0000ff',
     marginTop: 10,
     marginBottom: 10,
-    marginRight: 5,
-    marginLeft: 5,
+    // marginRight: 5,
+    marginLeft: 10,
   } satisfies ContainerStyleSheet,
+
+  image: {
+    height: 40,
+    width: 40,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  } satisfies ImageStyleSheet,
+
+  htmlContainer: {
+    borderRadius: 5,
+    backgroundColor: '#0000ff',
+    marginLeft: 5,
+    marginRight: 5,
+    marginTop: 10,
+    marginBottom: 10,
+  } satisfies ContainerStyleSheet,
+
   emptyContainer: {
     height: 40,
     borderRadius: 5,
@@ -32,12 +49,13 @@ export const styles = {
     marginTop: 10,
     marginBottom: 10,
   } satisfies ContainerStyleSheet,
-  image: {
+
+  button: {
+    width: 100,
     height: 40,
-  } satisfies ImageStyleSheet,
-  deepestContainer: {
-    height: 20,
-    borderRadius: 5,
-    backgroundColor: '#00ff00',
-  } satisfies ContainerStyleSheet,
+    borderRadius: 3,
+    borderColor: '#000000',
+    borderWidth: 2,
+    backgroundColor: '#e74c3c',
+  },
 };

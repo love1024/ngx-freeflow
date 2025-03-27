@@ -1,7 +1,7 @@
 <h1>SVG</h1>
 <svg ff-root [styleSheet]="svgStyles.root">
   <svg ff-container [styleSheet]="svgStyles.container">
-    <svg ff-container [styleSheet]="svgStyles.resizeableContainer">
+    <svg ff-container [styleSheet]="svgStyles.htmlContainer">
       <foreignObject ff-html>
         <div>This is some HTML</div>
       </foreignObject>
@@ -12,10 +12,10 @@
     <svg ff-container [styleSheet]="svgStyles.resizeableContainer">
       <svg:svg
         ff-image
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/PNG_transparency_demonstration_1.png/548px-PNG_transparency_demonstration_1.png"
+        src="https://raw.githubusercontent.com/n3r4zzurr0/svg-spinners/abfa05c49acf005b8b1e0ef8eb25a67a7057eb20/svg-css/90-ring.svg"
         [styleSheet]="svgStyles.image"></svg:svg>
     </svg>
-    <svg ff-container [styleSheet]="svgStyles.emptyContainer"></svg>
+    <svg ff-container [styleSheet]="svgStyles.button"></svg>
   </svg>
 </svg>
 

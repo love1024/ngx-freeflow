@@ -12,11 +12,19 @@ const styleSheetWithDefaults = (
     marginTop: 0,
     marginLeft: 0,
     marginRight: 0,
+    borderColor: '',
+    borderWidth: 0,
+    borderRadius: 0,
     ...styleSheet,
   };
 };
 
 export class ContainerViewModel extends BlockViewModel {
+  public contentHeight = 0;
+  public contentWidth = 0;
+  public contentX = 0;
+  public contentY = 0;
+
   public styleSheet: Required<ContainerStyleSheet>;
 
   constructor(
@@ -26,5 +34,26 @@ export class ContainerViewModel extends BlockViewModel {
     super();
 
     this.styleSheet = styleSheetWithDefaults(styleSheet);
+  }
+
+  protected override calculateHeight(): void {
+    super.calculateHeight();
+
+    this.contentHeight = this.height - this.styleSheet.borderWidth;
+  }
+
+  protected override calculateWidth(): void {
+    super.calculateWidth();
+
+    console.log(this.width);
+    this.contentWidth = this.width - this.styleSheet.borderWidth;
+    console.log(this.contentWidth);
+  }
+
+  protected override calculatePosition(): void {
+    super.calculatePosition();
+
+    this.contentX = this.styleSheet.borderWidth / 2;
+    this.contentY = this.styleSheet.borderWidth / 2;
   }
 }

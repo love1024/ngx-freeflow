@@ -5,7 +5,7 @@ export const isBlock = (model: AnyViewModel): model is BlockViewModel => {
   return model instanceof BlockViewModel;
 };
 
-const flatToRoot = (startModel: AnyViewModel): AnyViewModel[] => {
+const pathFromRoot = (startModel: AnyViewModel): AnyViewModel[] => {
   const chain: AnyViewModel[] = [];
 
   let current: AnyViewModel | null = startModel;
@@ -15,6 +15,31 @@ const flatToRoot = (startModel: AnyViewModel): AnyViewModel[] => {
   }
 
   return chain.reverse();
+};
+
+const getModelWidth = (model: AnyViewModel): number => {
+  const chainFromRoot = pathFromRoot(model);
+
+  const [root] = chainFromRoot;
+  let width = root.width;
+
+  chainFromRoot.filter(isBlock).forEach(item => {
+    // we know width either from styles
+    if (item.styleSheet.width) {
+      width = item.styleSheet.width;
+    } else {
+      // or if styles has no width, we compute it from margins
+      if (typeof item.styleSheet.marginLeft === 'number') {
+        width -= item.styleSheet.marginLeft;
+      }
+
+      if (typeof item.styleSheet.marginRight === 'number') {
+        width -= item.styleSheet.marginRight;
+      }
+    }
+  });
+
+  return width;
 };
 
 export const styleSheetWithDefaults = (
@@ -56,15 +81,10 @@ export abstract class BlockViewModel extends AnyViewModel {
   protected calculatePosition() {
     if (!this.parent) return;
 
+    let y = 0;
+    y += this.styleSheet.marginTop;
     const prevSibling =
       this.parent.children[this.parent.children.indexOf(this) - 1];
-
-    let x = 0;
-    let y = 0;
-
-    y += this.styleSheet.marginTop;
-    x += this.styleSheet.marginLeft;
-
     if (prevSibling && prevSibling instanceof BlockViewModel) {
       y +=
         prevSibling.y +
@@ -72,26 +92,28 @@ export abstract class BlockViewModel extends AnyViewModel {
         prevSibling.styleSheet.marginBottom;
     }
 
+    let x = 0;
+    if (
+      this.styleSheet.marginLeft === 'auto' &&
+      this.styleSheet.marginRight === 'auto'
+    ) {
+      const parentWidth = getModelWidth(this.parent);
+      x = parentWidth / 2 - this.width / 2;
+    } else if (
+      typeof this.styleSheet.marginLeft === 'number' &&
+      typeof this.styleSheet.marginRight === 'number'
+    ) {
+      x += this.styleSheet.marginLeft;
+    } else {
+      x = 0;
+    }
+
     this.x = x;
     this.y = y;
   }
 
   protected calculateWidth() {
-    if (this.styleSheet.width) {
-      this.width = this.styleSheet.width;
-    } else {
-      const chainFromRoot = flatToRoot(this);
-
-      const [root] = chainFromRoot;
-      let width = root.width;
-
-      chainFromRoot.filter(isBlock).forEach(block => {
-        width =
-          width - block.styleSheet.marginLeft - block.styleSheet.marginRight;
-      });
-
-      this.width = width;
-    }
+    this.width = getModelWidth(this);
   }
 
   protected calculateHeight() {

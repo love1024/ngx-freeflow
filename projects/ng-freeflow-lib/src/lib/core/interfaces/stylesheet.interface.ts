@@ -10,8 +10,8 @@ interface WithHeight {
 }
 
 interface WithMargin {
-  marginLeft: number;
-  marginRight: number;
+  marginLeft: number | 'auto';
+  marginRight: number | 'auto';
   marginTop: number;
   marginBottom: number;
 }
@@ -29,7 +29,9 @@ export interface RootStyleSheet
 
 export interface ContainerStyleSheet extends BlockStyleSheet {
   backgroundColor: string;
-  borderRadius: number;
+  borderColor?: string;
+  borderRadius?: number;
+  borderWidth?: number;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
