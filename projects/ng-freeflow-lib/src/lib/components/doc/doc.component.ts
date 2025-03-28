@@ -1,8 +1,7 @@
-import { Directive, input, OnInit, signal, Signal } from '@angular/core';
+import { Directive, input, OnInit } from '@angular/core';
 import { DocViewComponent } from '../doc-view/doc-view.component';
 import { BlockStyleSheet } from '../../../public-api';
 import { ComponentViewModel } from '../../core/models/component-view.model';
-import { AnyViewModel } from '../../core/models/any-view.model';
 
 @Directive({
   host: {
@@ -12,10 +11,11 @@ import { AnyViewModel } from '../../core/models/any-view.model';
     '[attr.y]': 'model().y',
   },
 })
-export class DocComponent extends DocViewComponent implements OnInit {
+export class DocComponent
+  extends DocViewComponent<ComponentViewModel>
+  implements OnInit
+{
   styleSheet = input<BlockStyleSheet>({});
-
-  protected model!: Signal<ComponentViewModel>;
 
   constructor() {
     super();
@@ -25,11 +25,7 @@ export class DocComponent extends DocViewComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
-    this.model = signal(this.createModel());
-  }
-
-  protected modelFactory(): AnyViewModel {
+  protected modelFactory(): ComponentViewModel {
     return new ComponentViewModel(this, this.styleSheet());
   }
 }

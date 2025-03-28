@@ -3,19 +3,16 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  forwardRef,
   inject,
   input,
   NgZone,
   OnDestroy,
   OnInit,
-  signal,
-  Signal,
 } from '@angular/core';
 import { DocViewComponent } from '../doc-view/doc-view.component';
 import { HtmlViewModel } from '../../core/models/html-view.model';
 import { HtmlStyleSheet } from '../../core/interfaces/stylesheet.interface';
-import { AnyViewModel } from '../../core/models/any-view.model';
+import { provideComponent } from '../../core/utils/provide-component';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -23,12 +20,7 @@ import { AnyViewModel } from '../../core/models/any-view.model';
   imports: [],
   templateUrl: './html-block.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    {
-      provide: DocViewComponent,
-      useExisting: forwardRef(() => HtmlBlockComponent),
-    },
-  ],
+  providers: [provideComponent(HtmlBlockComponent)],
   host: {
     '[attr.width]': 'model().width',
     '[attr.height]': 'model().width',
@@ -37,12 +29,10 @@ import { AnyViewModel } from '../../core/models/any-view.model';
   },
 })
 export class HtmlBlockComponent
-  extends DocViewComponent
+  extends DocViewComponent<HtmlViewModel>
   implements OnInit, OnDestroy
 {
   styleSheet = input<HtmlStyleSheet>({});
-
-  protected model!: Signal<HtmlViewModel>;
 
   private readonly zone = inject(NgZone);
   private readonly cd = inject(ChangeDetectorRef);
@@ -55,11 +45,10 @@ export class HtmlBlockComponent
     super();
   }
 
-  ngOnInit(): void {
-    this.model = signal(this.createModel());
+  override ngOnInit(): void {
+    super.ngOnInit();
 
     this.resizeObserver = new ResizeObserver(([entry]) => {
-      console.log(entry);
       this.zone.run(() => {
         this.model().setHeight(entry.contentRect.height);
         this.treeManager.calculateLayout();
@@ -75,7 +64,7 @@ export class HtmlBlockComponent
     this.resizeObserver.disconnect();
   }
 
-  protected modelFactory(): AnyViewModel {
+  protected modelFactory(): HtmlViewModel {
     return new HtmlViewModel(this, this.styleSheet());
   }
 }

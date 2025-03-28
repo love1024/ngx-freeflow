@@ -1,12 +1,14 @@
-import { Directive, inject, Signal } from '@angular/core';
+import { Directive, inject, OnInit, signal, Signal } from '@angular/core';
 import { AnyViewModel } from '../../core/models/any-view.model';
 import { DocTreeBuilderService } from '../../core/services/doc-tree-builder.service';
 
 @Directive()
-export abstract class DocViewComponent {
-  protected abstract model: Signal<AnyViewModel>;
+export abstract class DocViewComponent<T extends AnyViewModel = AnyViewModel>
+  implements OnInit
+{
+  protected model!: Signal<T>;
 
-  protected abstract modelFactory(): AnyViewModel;
+  protected abstract modelFactory(): T;
 
   protected treeManager = inject(DocTreeBuilderService);
 
@@ -15,7 +17,11 @@ export abstract class DocViewComponent {
     skipSelf: true,
   });
 
-  protected createModel<T extends AnyViewModel>(): T {
+  ngOnInit(): void {
+    this.model = signal(this.createModel());
+  }
+
+  protected createModel(): T {
     const model = this.modelFactory() as T;
 
     const parent = this.treeManager.getByComponent(this.parent!);

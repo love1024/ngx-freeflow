@@ -45,9 +45,7 @@ export class ContainerViewModel extends BlockViewModel {
   protected override calculateWidth(): void {
     super.calculateWidth();
 
-    console.log(this.width);
     this.contentWidth = this.width - this.styleSheet.borderWidth;
-    console.log(this.contentWidth);
   }
 
   protected override calculatePosition(): void {

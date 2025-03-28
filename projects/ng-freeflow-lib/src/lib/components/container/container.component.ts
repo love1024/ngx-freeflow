@@ -3,17 +3,15 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
-  forwardRef,
   inject,
   input,
   OnInit,
-  Signal,
-  signal,
 } from '@angular/core';
 import { ContainerStyleSheet } from '../../core/interfaces/stylesheet.interface';
 import { DocViewComponent } from '../doc-view/doc-view.component';
 import { ContainerViewModel } from '../../core/models/container-view.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { provideComponent } from '../../core/utils/provide-component';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -27,17 +25,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     '[attr.x]': 'model().x',
     '[attr.y]': 'model().y',
   },
-  providers: [
-    {
-      provide: DocViewComponent,
-      useExisting: forwardRef(() => ContainerComponent),
-    },
-  ],
+  providers: [provideComponent(ContainerComponent)],
 })
-export class ContainerComponent extends DocViewComponent implements OnInit {
+export class ContainerComponent
+  extends DocViewComponent<ContainerViewModel>
+  implements OnInit
+{
   styleSheet = input.required<ContainerStyleSheet>();
-
-  protected model!: Signal<ContainerViewModel>;
 
   private cd = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
@@ -50,8 +44,8 @@ export class ContainerComponent extends DocViewComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
-    this.model = signal(this.createModel());
+  override ngOnInit(): void {
+    super.ngOnInit();
 
     this.subscribeToViewUpdates();
   }

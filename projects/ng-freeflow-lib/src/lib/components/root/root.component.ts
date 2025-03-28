@@ -3,17 +3,14 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  forwardRef,
   inject,
   input,
-  OnInit,
-  signal,
-  Signal,
 } from '@angular/core';
 
 import { RootViewModel } from '../../core/models/root-view.model';
 import { DocViewComponent } from '../doc-view/doc-view.component';
-import { RootStyleSheet } from '../../../public-api';
+import { RootStyleSheet } from '../../core/interfaces/stylesheet.interface';
+import { provideComponent } from '../../core/utils/provide-component';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -25,26 +22,15 @@ import { RootStyleSheet } from '../../../public-api';
     '[attr.width]': 'model().width',
     '[attr.height]': 'model().height',
   },
-  providers: [
-    {
-      provide: DocViewComponent,
-      useExisting: forwardRef(() => RootComponent),
-    },
-  ],
+  providers: [provideComponent(RootComponent)],
 })
 export class RootComponent
-  extends DocViewComponent
-  implements OnInit, AfterContentInit
+  extends DocViewComponent<RootViewModel>
+  implements AfterContentInit
 {
   styleSheet = input.required<RootStyleSheet>();
 
-  model!: Signal<RootViewModel>;
-
   private cd = inject(ChangeDetectorRef);
-
-  ngOnInit(): void {
-    this.model = signal(this.createModel());
-  }
 
   ngAfterContentInit(): void {
     this.treeManager.root?.calculateLayout();
