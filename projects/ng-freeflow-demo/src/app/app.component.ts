@@ -6,6 +6,7 @@ import {
   RootComponent,
 } from 'ng-freeflow-lib';
 import { styles } from './app.styles';
+import { ButtonComponent } from './components/button/button.component';
 
 @Component({
   selector: 'ffd-root',
@@ -14,6 +15,7 @@ import { styles } from './app.styles';
     RootComponent,
     HtmlBlockComponent,
     ImageViewComponent,
+    ButtonComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',

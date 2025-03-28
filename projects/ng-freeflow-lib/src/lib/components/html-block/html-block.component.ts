@@ -9,10 +9,8 @@ import {
   NgZone,
   OnDestroy,
   OnInit,
-  Optional,
   signal,
   Signal,
-  SkipSelf,
 } from '@angular/core';
 import { DocViewComponent } from '../doc-view/doc-view.component';
 import { HtmlViewModel } from '../../core/models/html-view.model';
@@ -53,7 +51,7 @@ export class HtmlBlockComponent
 
   private resizeObserver!: ResizeObserver;
 
-  constructor(@SkipSelf() @Optional() protected parent: DocViewComponent) {
+  constructor() {
     super();
   }
 

@@ -6,17 +6,19 @@ import { DocTreeBuilderService } from '../../core/services/doc-tree-builder.serv
 export abstract class DocViewComponent {
   protected abstract model: Signal<AnyViewModel>;
 
-  protected abstract parent: DocViewComponent | null;
-
   protected abstract modelFactory(): AnyViewModel;
 
   protected treeManager = inject(DocTreeBuilderService);
+
+  protected parent: DocViewComponent | null = inject(DocViewComponent, {
+    optional: true,
+    skipSelf: true,
+  });
 
   protected createModel<T extends AnyViewModel>(): T {
     const model = this.modelFactory() as T;
 
     const parent = this.treeManager.getByComponent(this.parent!);
-
     if (parent) {
       model.parent = parent;
       parent.children.push(model);

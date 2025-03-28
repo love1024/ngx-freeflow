@@ -38,8 +38,6 @@ export class RootComponent
 {
   styleSheet = input.required<RootStyleSheet>();
 
-  protected parent = null;
-
   model!: Signal<RootViewModel>;
 
   private cd = inject(ChangeDetectorRef);

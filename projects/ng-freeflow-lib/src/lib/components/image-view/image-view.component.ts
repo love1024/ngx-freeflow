@@ -1,12 +1,4 @@
-import {
-  Component,
-  input,
-  OnInit,
-  Optional,
-  signal,
-  Signal,
-  SkipSelf,
-} from '@angular/core';
+import { Component, input, OnInit, signal, Signal } from '@angular/core';
 import { ImageStyleSheet } from '../../../public-api';
 import { ImageViewModel } from '../../core/models/image-view.model';
 import { DocViewComponent } from '../doc-view/doc-view.component';
@@ -30,7 +22,7 @@ export class ImageViewComponent extends DocViewComponent implements OnInit {
 
   protected model!: Signal<ImageViewModel>;
 
-  constructor(@SkipSelf() @Optional() protected parent: DocViewComponent) {
+  constructor() {
     super();
   }
 

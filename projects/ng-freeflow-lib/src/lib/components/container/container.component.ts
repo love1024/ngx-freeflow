@@ -7,10 +7,8 @@ import {
   inject,
   input,
   OnInit,
-  Optional,
   Signal,
   signal,
-  SkipSelf,
 } from '@angular/core';
 import { ContainerStyleSheet } from '../../core/interfaces/stylesheet.interface';
 import { DocViewComponent } from '../doc-view/doc-view.component';
@@ -44,7 +42,7 @@ export class ContainerComponent extends DocViewComponent implements OnInit {
   private cd = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
 
-  constructor(@SkipSelf() @Optional() protected parent: DocViewComponent) {
+  constructor() {
     super();
 
     if (!this.parent) {
