@@ -28,10 +28,12 @@ export interface RootStyleSheet
     Partial<WithHeight> {}
 
 export interface ContainerStyleSheet extends BlockStyleSheet {
-  backgroundColor: string;
+  backgroundColor?: string;
   borderColor?: string;
   borderRadius?: number;
   borderWidth?: number;
+  onHover?: ContainerStyleSheet | null;
+  onFocus?: ContainerStyleSheet | null;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type

@@ -5,11 +5,15 @@ import {
   DestroyRef,
   inject,
   input,
+  OnDestroy,
   OnInit,
 } from '@angular/core';
 import { ContainerStyleSheet } from '../../core/interfaces/stylesheet.interface';
 import { DocViewComponent } from '../doc-view/doc-view.component';
-import { ContainerViewModel } from '../../core/models/container-view.model';
+import {
+  ContainerViewModel,
+  PsuedoEvent,
+} from '../../core/models/container-view.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { provideComponent } from '../../core/utils/provide-component';
 
@@ -24,12 +28,23 @@ import { provideComponent } from '../../core/utils/provide-component';
     '[attr.height]': 'model().height',
     '[attr.x]': 'model().x',
     '[attr.y]': 'model().y',
+    '(mouseover)': 'onMouseOver()',
+    '(mouseout)': 'onMouseOut()',
+    '(focus)': 'onFocus()',
+    '(blur)': 'onBlur()',
   },
   providers: [provideComponent(ContainerComponent)],
+  styles: [
+    `
+      :host:focus {
+        outline: none;
+      }
+    `,
+  ],
 })
 export class ContainerComponent
   extends DocViewComponent<ContainerViewModel>
-  implements OnInit
+  implements OnInit, OnDestroy
 {
   styleSheet = input.required<ContainerStyleSheet>();
 
@@ -50,15 +65,35 @@ export class ContainerComponent
     this.subscribeToViewUpdates();
   }
 
+  ngOnDestroy(): void {
+    this.model().destroy();
+  }
+
+  protected onMouseOver() {
+    this.model().triggerPsuedoEvent(PsuedoEvent.hoverIn);
+  }
+
+  protected onMouseOut() {
+    this.model().triggerPsuedoEvent(PsuedoEvent.hoverOut);
+  }
+
+  protected onFocus() {
+    this.model().triggerPsuedoEvent(PsuedoEvent.focusIn);
+  }
+
+  protected onBlur() {
+    this.model().triggerPsuedoEvent(PsuedoEvent.focusOut);
+  }
+
+  protected modelFactory(): ContainerViewModel {
+    return new ContainerViewModel(this, this.styleSheet());
+  }
+
   private subscribeToViewUpdates(): void {
     this.model()
       .viewUpdate.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.cd.markForCheck();
       });
-  }
-
-  protected modelFactory(): ContainerViewModel {
-    return new ContainerViewModel(this, this.styleSheet());
   }
 }
