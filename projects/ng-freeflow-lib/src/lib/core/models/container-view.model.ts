@@ -11,7 +11,7 @@ import {
 import { DocViewComponent } from '../../components/doc-view/doc-view.component';
 import { ContainerStyleSheet } from '../interfaces/stylesheet.interface';
 import { BlockViewModel } from './block-view.model';
-import { StylePrioritizer, StylesPriority } from '../utils/style-prioritizer';
+import { StylePrioritizer, StylesSource } from '../utils/style-prioritizer';
 
 const styleSheetWithDefaults = (
   styleSheet: ContainerStyleSheet
@@ -131,14 +131,14 @@ export class ContainerViewModel extends BlockViewModel {
       this.backgroundColor =
         hover.backgroundColor ?? this.styleSheet.backgroundColor;
 
-      this.prioritizer.set(StylesPriority.hover);
+      this.prioritizer.set(StylesSource.hover);
     } else {
-      const fallbackStyles = this.prioritizer.getFallback(StylesPriority.hover);
+      const fallbackStyles = this.prioritizer.getFallback(StylesSource.hover);
 
       this.borderColor = fallbackStyles.borderColor!;
       this.backgroundColor = fallbackStyles.backgroundColor!;
 
-      this.prioritizer.unset(StylesPriority.hover);
+      this.prioritizer.unset(StylesSource.hover);
     }
   }
 
@@ -154,15 +154,14 @@ export class ContainerViewModel extends BlockViewModel {
       this.backgroundColor =
         focus.backgroundColor ?? this.styleSheet.backgroundColor;
 
-      this.prioritizer.set(StylesPriority.focus);
+      this.prioritizer.set(StylesSource.focus);
     } else {
-      const fallbackStyles = this.prioritizer.getFallback(StylesPriority.focus);
-      console.log(fallbackStyles);
+      const fallbackStyles = this.prioritizer.getFallback(StylesSource.focus);
 
       this.borderColor = fallbackStyles.borderColor!;
       this.backgroundColor = fallbackStyles.backgroundColor!;
 
-      this.prioritizer.unset(StylesPriority.focus);
+      this.prioritizer.unset(StylesSource.focus);
     }
   }
 }

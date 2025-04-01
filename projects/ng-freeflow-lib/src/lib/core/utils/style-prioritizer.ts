@@ -1,58 +1,57 @@
 import { ContainerStyleSheet } from '../interfaces/stylesheet.interface';
 
-export enum StylesPriority {
+export enum StylesSource {
   hover,
   focus,
   styleSheet,
 }
 
-type ElementStyleSheets = Record<StylesPriority, ContainerStyleSheet | null>;
-
 export class StylePrioritizer {
   private styleStateMachine = {
-    [StylesPriority.focus]: {
-      fallbackStyle: StylesPriority.styleSheet,
+    [StylesSource.hover]: {
+      fallbackStyle: StylesSource.focus,
       isSet: false,
     },
-    [StylesPriority.hover]: {
-      fallbackStyle: StylesPriority.focus,
+    [StylesSource.focus]: {
+      fallbackStyle: StylesSource.styleSheet,
       isSet: false,
     },
-    [StylesPriority.styleSheet]: {
-      fallbackStyle: StylesPriority.styleSheet,
-      isSet: true,
+    [StylesSource.styleSheet]: {
+      fallbackStyle: StylesSource.styleSheet,
+      isSet: true, // activated always
     },
   };
 
-  private readonly elementStyles: ElementStyleSheets;
+  private readonly elementStyles: Record<
+    StylesSource,
+    ContainerStyleSheet | null
+  >;
 
   constructor(styleSheet: Required<ContainerStyleSheet>) {
     this.elementStyles = {
-      [StylesPriority.styleSheet]: styleSheet,
-      [StylesPriority.focus]: styleSheet.onFocus,
-      [StylesPriority.hover]: styleSheet.onHover,
+      [StylesSource.styleSheet]: styleSheet,
+      [StylesSource.focus]: styleSheet.onFocus,
+      [StylesSource.hover]: styleSheet.onHover,
     };
   }
 
-  public set(current: StylesPriority) {
+  public set(current: StylesSource) {
     this.styleStateMachine[current].isSet = true;
   }
 
-  public unset(current: StylesPriority) {
+  public unset(current: StylesSource) {
     this.styleStateMachine[current].isSet = false;
   }
 
-  public getFallback(current: StylesPriority): ContainerStyleSheet {
-    const fallback =
-      this.elementStyles[this.styleStateMachine[current].fallbackStyle];
-    const isSet =
-      this.styleStateMachine[this.styleStateMachine[current].fallbackStyle]
-        .isSet;
+  public getFallback(current: StylesSource): ContainerStyleSheet {
+    const fallbackSource = this.styleStateMachine[current].fallbackStyle;
+    const fallbackStyles = this.elementStyles[fallbackSource];
+    const isSet = this.styleStateMachine[fallbackSource].isSet;
 
-    if (fallback && isSet) {
-      return fallback;
+    if (fallbackStyles && isSet) {
+      return fallbackStyles;
     }
 
-    return this.getFallback(this.styleStateMachine[current].fallbackStyle);
+    return this.getFallback(fallbackSource);
   }
 }

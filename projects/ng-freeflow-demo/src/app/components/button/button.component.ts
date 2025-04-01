@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
 import {
   ContainerComponent,
   HtmlBlockComponent,
@@ -13,15 +13,27 @@ import { styles } from './button.styles';
   template: `
     <svg ff-container [styleSheet]="styles.button">
       <foreignObject ff-html>
-        <div
-          style="height: 40px; display: flex; justify-content: center; align-items: center;;">
-          Add New
-        </div>
+        <div class="button-content">{{ text() }}</div>
       </foreignObject>
     </svg>
   `,
+  styles: [
+    `
+      .button-content {
+        height: 30px;
+        user-select: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        font: 0.8rem 'Fira Sans', sans-serif;
+      }
+    `,
+  ],
   providers: [provideComponent(ButtonComponent)],
 })
 export class ButtonComponent extends DocComponent {
+  text = input<string>('');
+
   protected styles = styles;
 }

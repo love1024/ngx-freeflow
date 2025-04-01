@@ -1,6 +1,5 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   inject,
@@ -35,7 +34,6 @@ export class HtmlBlockComponent
   styleSheet = input<HtmlStyleSheet>({});
 
   private readonly zone = inject(NgZone);
-  private readonly cd = inject(ChangeDetectorRef);
   private readonly host =
     inject<ElementRef<SVGForeignObjectElement>>(ElementRef);
 
@@ -50,7 +48,8 @@ export class HtmlBlockComponent
 
     this.resizeObserver = new ResizeObserver(([entry]) => {
       this.zone.run(() => {
-        this.model().setHeight(entry.contentRect.height);
+        const [box] = entry.borderBoxSize;
+        this.model().setHeight(box.blockSize);
         this.treeManager.calculateLayout();
       });
     });
