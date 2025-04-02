@@ -25,6 +25,7 @@ import { provideComponent } from '../../core/utils/provide-component';
     '[attr.height]': 'model().width',
     '[attr.x]': 'model().x',
     '[attr.y]': 'model().y',
+    '[style.filter]': 'model().filter',
   },
 })
 export class HtmlBlockComponent

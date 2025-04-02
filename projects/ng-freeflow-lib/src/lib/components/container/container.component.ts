@@ -10,12 +10,10 @@ import {
 } from '@angular/core';
 import { ContainerStyleSheet } from '../../core/interfaces/stylesheet.interface';
 import { DocViewComponent } from '../doc-view/doc-view.component';
-import {
-  ContainerViewModel,
-  PsuedoEvent,
-} from '../../core/models/container-view.model';
+import { ContainerViewModel } from '../../core/models/container-view.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { provideComponent } from '../../core/utils/provide-component';
+import { BlockEvent } from '../../core/models/block-view.model';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -32,10 +30,14 @@ import { provideComponent } from '../../core/utils/provide-component';
     '(mouseout)': 'onMouseOut()',
     '(focus)': 'onFocus()',
     '(blur)': 'onBlur()',
+    '[style.filter]': 'model().filter',
   },
   providers: [provideComponent(ContainerComponent)],
   styles: [
     `
+      :host {
+        overflow: visible;
+      }
       :host:focus {
         outline: none;
       }
@@ -63,6 +65,8 @@ export class ContainerComponent
     super.ngOnInit();
 
     this.subscribeToViewUpdates();
+
+    console.log(this.model());
   }
 
   ngOnDestroy(): void {
@@ -70,19 +74,19 @@ export class ContainerComponent
   }
 
   protected onMouseOver() {
-    this.model().triggerPsuedoEvent(PsuedoEvent.hoverIn);
+    this.model().triggerBlockEvent(BlockEvent.hoverIn);
   }
 
   protected onMouseOut() {
-    this.model().triggerPsuedoEvent(PsuedoEvent.hoverOut);
+    this.model().triggerBlockEvent(BlockEvent.hoverOut);
   }
 
   protected onFocus() {
-    this.model().triggerPsuedoEvent(PsuedoEvent.focusIn);
+    this.model().triggerBlockEvent(BlockEvent.focusIn);
   }
 
   protected onBlur() {
-    this.model().triggerPsuedoEvent(PsuedoEvent.focusOut);
+    this.model().triggerBlockEvent(BlockEvent.focusOut);
   }
 
   protected modelFactory(): ContainerViewModel {

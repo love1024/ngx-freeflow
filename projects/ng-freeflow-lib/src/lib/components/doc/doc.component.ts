@@ -1,4 +1,4 @@
-import { Directive, input, OnInit } from '@angular/core';
+import { Directive, input, OnInit, signal } from '@angular/core';
 import { DocViewComponent } from '../doc-view/doc-view.component';
 import { BlockStyleSheet } from '../../../public-api';
 import { ComponentViewModel } from '../../core/models/component-view.model';
@@ -9,6 +9,8 @@ import { ComponentViewModel } from '../../core/models/component-view.model';
     '[attr.height]': 'model().height',
     '[attr.x]': 'model().x',
     '[attr.y]': 'model().y',
+    '[style.filter]': 'model().filter',
+    '[style.overflow]': 'overflow()',
   },
 })
 export class DocComponent
@@ -24,6 +26,8 @@ export class DocComponent
       throw new Error('Injection error');
     }
   }
+
+  protected overflow = signal('visible');
 
   protected modelFactory(): ComponentViewModel {
     return new ComponentViewModel(this, this.styleSheet());

@@ -21,5 +21,11 @@ export class HtmlViewModel extends BlockViewModel {
     super();
 
     this.styleSheet = styleSheetWithDefaults(styleSheet);
+
+    this.applyStyles(this.styleSheet);
+
+    super.init();
   }
+
+  protected override applyStyles(styles: HtmlStyleSheet): void {}
 }

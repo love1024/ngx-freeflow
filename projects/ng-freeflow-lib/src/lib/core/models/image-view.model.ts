@@ -22,4 +22,6 @@ export class ImageViewModel extends BlockViewModel {
 
     this.styleSheet = styleSheetWithDefaults(styleSheet);
   }
+
+  protected override applyStyles(styles: ImageStyleSheet): void {}
 }

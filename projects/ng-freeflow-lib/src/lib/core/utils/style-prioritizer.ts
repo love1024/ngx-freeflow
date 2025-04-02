@@ -1,4 +1,4 @@
-import { ContainerStyleSheet } from '../interfaces/stylesheet.interface';
+import { BlockStyleSheet } from '../interfaces/stylesheet.interface';
 
 export enum StylesSource {
   hover,
@@ -22,12 +22,9 @@ export class StylePrioritizer {
     },
   };
 
-  private readonly elementStyles: Record<
-    StylesSource,
-    ContainerStyleSheet | null
-  >;
+  private readonly elementStyles: Record<StylesSource, BlockStyleSheet | null>;
 
-  constructor(styleSheet: Required<ContainerStyleSheet>) {
+  constructor(styleSheet: Required<BlockStyleSheet>) {
     this.elementStyles = {
       [StylesSource.styleSheet]: styleSheet,
       [StylesSource.focus]: styleSheet.onFocus,
@@ -43,7 +40,7 @@ export class StylePrioritizer {
     this.styleStateMachine[current].isSet = false;
   }
 
-  public getFallback(current: StylesSource): ContainerStyleSheet {
+  public getFallback(current: StylesSource): BlockStyleSheet {
     const fallbackSource = this.styleStateMachine[current].fallbackStyle;
     const fallbackStyles = this.elementStyles[fallbackSource];
     const isSet = this.styleStateMachine[fallbackSource].isSet;

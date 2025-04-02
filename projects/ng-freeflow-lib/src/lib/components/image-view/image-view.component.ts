@@ -15,6 +15,7 @@ import { DocViewComponent } from '../doc-view/doc-view.component';
     '[attr.height]': 'model().width',
     '[attr.x]': 'model().x',
     '[attr.y]': 'model().y',
+    '[style.filter]': 'model().filter',
   },
   providers: [provideComponent(ImageViewComponent)],
 })

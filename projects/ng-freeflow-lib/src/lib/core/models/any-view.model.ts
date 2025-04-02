@@ -1,8 +1,9 @@
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { DocViewComponent } from '../../components/doc-view/doc-view.component';
 import { StyleSheet } from '../interfaces/stylesheet.interface';
 
 export abstract class AnyViewModel {
+  protected subscription = new Subscription();
   private _viewUpdate$ = new Subject<void>();
 
   public viewUpdate = this._viewUpdate$.asObservable();
@@ -20,5 +21,9 @@ export abstract class AnyViewModel {
 
   public updateView(): void {
     this._viewUpdate$.next();
+  }
+
+  public destroy() {
+    this.subscription.unsubscribe();
   }
 }
