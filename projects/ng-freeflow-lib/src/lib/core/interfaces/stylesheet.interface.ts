@@ -1,3 +1,5 @@
+import { Shadow } from './filter.interface';
+
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface StyleSheet {}
 
@@ -18,13 +20,6 @@ interface WithMargin {
   marginRight: number | 'auto';
   marginTop: number;
   marginBottom: number;
-}
-
-export interface Shadow {
-  hOffset: number;
-  vOffset: number;
-  blur: number;
-  color: string;
 }
 
 export interface BlockStyleSheet

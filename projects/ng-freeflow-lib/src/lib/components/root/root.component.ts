@@ -11,11 +11,13 @@ import { RootViewModel } from '../../core/models/root-view.model';
 import { DocViewComponent } from '../doc-view/doc-view.component';
 import { RootStyleSheet } from '../../core/interfaces/stylesheet.interface';
 import { provideComponent } from '../../core/utils/provide-component';
+import { FilterService } from '../../core/services/filter.service';
+import { KeyValuePipe } from '@angular/common';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'svg[ff-root]',
-  imports: [],
+  imports: [KeyValuePipe],
   templateUrl: './root.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -30,6 +32,7 @@ export class RootComponent
 {
   styleSheet = input.required<RootStyleSheet>();
 
+  protected filterService = inject(FilterService);
   private cd = inject(ChangeDetectorRef);
 
   ngAfterContentInit(): void {

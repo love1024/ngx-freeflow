@@ -2,7 +2,8 @@ import { filter, map, merge, Observable, of, Subject, tap } from 'rxjs';
 import { BlockStyleSheet } from '../../../public-api';
 import { AnyViewModel } from './any-view.model';
 import { StylePrioritizer, StylesSource } from '../utils/style-prioritizer';
-import { Shadow } from '../interfaces/stylesheet.interface';
+import { Shadow } from '../interfaces/filter.interface';
+import { signal } from '@angular/core';
 
 export enum BlockEvent {
   hoverIn,
@@ -73,7 +74,7 @@ export abstract class BlockViewModel extends AnyViewModel {
   public height = 0;
   public x = 0;
   public y = 0;
-  public filter = '';
+  public filter = signal<Shadow | null>(null);
 
   public abstract override styleSheet: Required<BlockStyleSheet>;
 
@@ -159,10 +160,6 @@ export abstract class BlockViewModel extends AnyViewModel {
 
       this.height = height;
     }
-  }
-
-  protected getShadow({ hOffset, vOffset, blur, color }: Shadow) {
-    return `drop-shadow(${hOffset}px ${vOffset}px ${blur}px ${color})`;
   }
 
   private registerEvents(): Observable<void> {

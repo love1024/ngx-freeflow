@@ -1,1 +1,14 @@
+@for (shadow of filterService.shadows() | keyvalue; track shadow) {
+  <svg:filter
+    [id]="shadow.key"
+    color-interpolation-filters="sRGB"
+    filterUnits="userSpaceOnUse">
+    <svg:feDropShadow
+      [attr.dx]="shadow.value.hOffset"
+      [attr.dy]="shadow.value.vOffset"
+      [attr.stdDeviation]="shadow.value.blur"
+      [attr.flood-color]="shadow.value.color" />
+  </svg:filter>
+}
+
 <ng-content></ng-content>

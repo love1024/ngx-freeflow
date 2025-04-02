@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   DestroyRef,
   inject,
   input,
@@ -14,6 +15,7 @@ import { ContainerViewModel } from '../../core/models/container-view.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { provideComponent } from '../../core/utils/provide-component';
 import { BlockEvent } from '../../core/models/block-view.model';
+import { FilterService } from '../../core/services/filter.service';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -30,7 +32,7 @@ import { BlockEvent } from '../../core/models/block-view.model';
     '(mouseout)': 'onMouseOut()',
     '(focus)': 'onFocus()',
     '(blur)': 'onBlur()',
-    '[style.filter]': 'model().filter',
+    '[style.filter]': 'shadowUrl()',
   },
   providers: [provideComponent(ContainerComponent)],
   styles: [
@@ -50,6 +52,17 @@ export class ContainerComponent
 {
   styleSheet = input.required<ContainerStyleSheet>();
 
+  protected shadowUrl = computed(() => {
+    const filter = this.model().filter();
+    if (filter) {
+      const shadowId = this.filterService.getShadowId(filter);
+      return `url(#${shadowId()})`;
+    }
+
+    return null;
+  });
+
+  private filterService = inject(FilterService);
   private cd = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
 
@@ -66,7 +79,7 @@ export class ContainerComponent
 
     this.subscribeToViewUpdates();
 
-    console.log(this.model());
+    this.registerShadows();
   }
 
   ngOnDestroy(): void {
@@ -99,5 +112,19 @@ export class ContainerComponent
       .subscribe(() => {
         this.cd.markForCheck();
       });
+  }
+
+  private registerShadows() {
+    const shadows = [
+      this.styleSheet().boxShadow,
+      this.styleSheet().onHover?.boxShadow,
+      this.styleSheet().onFocus?.boxShadow,
+    ];
+
+    for (const shadow of shadows) {
+      if (shadow) {
+        this.filterService.addShadow(shadow);
+      }
+    }
   }
 }
