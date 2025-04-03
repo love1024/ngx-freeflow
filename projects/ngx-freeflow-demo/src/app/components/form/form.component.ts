@@ -3,7 +3,7 @@ import {
   DocComponent,
   HtmlBlockComponent,
   provideComponent,
-} from 'ng-freeflow-lib';
+} from 'ngx-freeflow-lib';
 import { ButtonComponent } from '../button/button.component';
 import { styles } from './form.styles';
 

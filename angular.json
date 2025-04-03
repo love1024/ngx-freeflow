@@ -3,23 +3,23 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ng-freeflow-lib": {
+    "ngx-freeflow-lib": {
       "projectType": "library",
-      "root": "projects/ng-freeflow-lib",
-      "sourceRoot": "projects/ng-freeflow-lib/src",
+      "root": "projects/ngx-freeflow-lib",
+      "sourceRoot": "projects/ngx-freeflow-lib/src",
       "prefix": "ff",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "project": "projects/ng-freeflow-lib/ng-package.json"
+            "project": "projects/ngx-freeflow-lib/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/ng-freeflow-lib/tsconfig.lib.prod.json"
+              "tsConfig": "projects/ngx-freeflow-lib/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "projects/ng-freeflow-lib/tsconfig.lib.json"
+              "tsConfig": "projects/ngx-freeflow-lib/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -27,7 +27,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "tsConfig": "projects/ng-freeflow-lib/tsconfig.spec.json",
+            "tsConfig": "projects/ngx-freeflow-lib/tsconfig.spec.json",
             "polyfills": ["zone.js", "zone.js/testing"]
           }
         },
@@ -35,41 +35,41 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": [
-              "projects/ng-freeflow-lib/**/*.ts",
-              "projects/ng-freeflow-lib/**/*.html"
+              "projects/ngx-freeflow-lib/**/*.ts",
+              "projects/ngx-freeflow-lib/**/*.html"
             ],
-            "eslintConfig": "projects/ng-freeflow-lib/eslint.config.js"
+            "eslintConfig": "projects/ngx-freeflow-lib/eslint.config.js"
           }
         }
       }
     },
-    "ng-freeflow-demo": {
+    "ngx-freeflow-demo": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
         }
       },
-      "root": "projects/ng-freeflow-demo",
-      "sourceRoot": "projects/ng-freeflow-demo/src",
+      "root": "projects/ngx-freeflow-demo",
+      "sourceRoot": "projects/ngx-freeflow-demo/src",
       "prefix": "ffd",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/ng-freeflow-demo",
-            "index": "projects/ng-freeflow-demo/src/index.html",
-            "browser": "projects/ng-freeflow-demo/src/main.ts",
+            "outputPath": "dist/ngx-freeflow-demo",
+            "index": "projects/ngx-freeflow-demo/src/index.html",
+            "browser": "projects/ngx-freeflow-demo/src/main.ts",
             "polyfills": ["zone.js"],
-            "tsConfig": "projects/ng-freeflow-demo/tsconfig.app.json",
+            "tsConfig": "projects/ngx-freeflow-demo/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
-                "input": "projects/ng-freeflow-demo/public"
+                "input": "projects/ngx-freeflow-demo/public"
               }
             ],
-            "styles": ["projects/ng-freeflow-demo/src/styles.scss"],
+            "styles": ["projects/ngx-freeflow-demo/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -100,10 +100,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "ng-freeflow-demo:build:production"
+              "buildTarget": "ngx-freeflow-demo:build:production"
             },
             "development": {
-              "buildTarget": "ng-freeflow-demo:build:development"
+              "buildTarget": "ngx-freeflow-demo:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -115,15 +115,15 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "polyfills": ["zone.js", "zone.js/testing"],
-            "tsConfig": "projects/ng-freeflow-demo/tsconfig.spec.json",
+            "tsConfig": "projects/ngx-freeflow-demo/tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
-                "input": "projects/ng-freeflow-demo/public"
+                "input": "projects/ngx-freeflow-demo/public"
               }
             ],
-            "styles": ["projects/ng-freeflow-demo/src/styles.scss"],
+            "styles": ["projects/ngx-freeflow-demo/src/styles.scss"],
             "scripts": []
           }
         },
@@ -131,10 +131,10 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": [
-              "projects/ng-freeflow-demo/**/*.ts",
-              "projects/ng-freeflow-demo/**/*.html"
+              "projects/ngx-freeflow-demo/**/*.ts",
+              "projects/ngx-freeflow-demo/**/*.html"
             ],
-            "eslintConfig": "projects/ng-freeflow-demo/eslint.config.js"
+            "eslintConfig": "projects/ngx-freeflow-demo/eslint.config.js"
           }
         }
       }

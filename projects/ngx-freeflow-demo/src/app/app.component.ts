@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ContainerComponent, RootComponent } from 'ng-freeflow-lib';
+import { ContainerComponent, RootComponent } from 'ngx-freeflow-lib';
 import { styles } from './app.styles';
 import { FormComponent } from './components/form/form.component';
 

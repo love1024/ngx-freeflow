@@ -1,4 +1,4 @@
-import { ContainerStyleSheet, HtmlStyleSheet } from 'ng-freeflow-lib';
+import { ContainerStyleSheet, HtmlStyleSheet } from 'ngx-freeflow-lib';
 
 export const styles = {
   controls: {

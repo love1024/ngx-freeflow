@@ -1,5 +1,5 @@
 /*
- * Public API Surface of ng-freeflow-lib
+ * Public API Surface of ngx-freeflow-lib
  */
 
 export * from './lib/components/container/container.component';

@@ -1,4 +1,4 @@
-import { ContainerStyleSheet } from 'ng-freeflow-lib';
+import { ContainerStyleSheet } from 'ngx-freeflow-lib';
 
 export const styles = {
   button: {

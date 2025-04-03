@@ -10,7 +10,7 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "ng-freeflow-lib": ["./dist/ng-freeflow-lib"]
+      "ngx-freeflow-lib": ["./dist/ngx-freeflow-lib"]
     },
     "skipLibCheck": true,
     "isolatedModules": true,

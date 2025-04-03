@@ -1,4 +1,4 @@
-import { RootStyleSheet, ContainerStyleSheet } from 'ng-freeflow-lib';
+import { RootStyleSheet, ContainerStyleSheet } from 'ngx-freeflow-lib';
 
 export const styles = {
   root: {

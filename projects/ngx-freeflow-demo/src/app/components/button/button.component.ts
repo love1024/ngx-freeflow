@@ -4,7 +4,7 @@ import {
   HtmlBlockComponent,
   DocComponent,
   provideComponent,
-} from 'ng-freeflow-lib';
+} from 'ngx-freeflow-lib';
 import { styles } from './button.styles';
 
 @Component({
