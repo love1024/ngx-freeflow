@@ -12,6 +12,7 @@ const styleSheetWithDefaults = (
     borderWidth: styleSheet.borderWidth ?? 0,
     borderRadius: styleSheet.borderRadius ?? 0,
     backgroundColor: styleSheet.backgroundColor ?? '',
+    animation: styleSheet.animation ?? null,
   };
 };
 

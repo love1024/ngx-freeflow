@@ -26,7 +26,9 @@ import { styles } from './button.styles';
         justify-content: center;
         align-items: center;
         color: #fff;
-        font: 0.8rem 'Fira Sans', sans-serif;
+        font:
+          0.8rem 'Fira Sans',
+          sans-serif;
       }
     `,
   ],

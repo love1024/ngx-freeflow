@@ -1,4 +1,5 @@
 <svg:rect
+  [id]="id"
   [attr.width]="model().contentWidth"
   [attr.height]="model().contentHeight"
   [attr.x]="model().contentX"
@@ -6,5 +7,28 @@
   [attr.rx]="model().borderRadius"
   [attr.fill]="model().backgroundColor"
   [attr.stroke]="model().borderColor"
-  [attr.stroke-width]="model().borderWidth"></svg:rect>
+  [attr.stroke-width]="model().borderWidth"
+  [style.filter]="shadowUrl()"></svg:rect>
+
+@if (styleSheet().animation) {
+  <svg:g
+    #animation
+    [id]="id"
+    [animationGroup]="styleSheet().animation ?? []"></svg:g>
+}
+
+@if (styleSheet().onHover?.animation) {
+  <svg:g
+    #hoverAnimation
+    [id]="id"
+    [animationGroup]="styleSheet().onHover?.animation ?? []"></svg:g>
+}
+
+@if (styleSheet().onFocus?.animation) {
+  <svg:g
+    #animation
+    [id]="id"
+    [animationGroup]="styleSheet().onFocus?.animation ?? []"></svg:g>
+}
+
 <ng-content></ng-content>

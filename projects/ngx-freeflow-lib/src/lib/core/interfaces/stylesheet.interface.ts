@@ -1,3 +1,4 @@
+import { Animation } from './animation.interface';
 import { Shadow } from './filter.interface';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -42,6 +43,7 @@ export interface ContainerStyleSheet extends BlockStyleSheet {
   borderColor?: string;
   borderRadius?: number;
   borderWidth?: number;
+  animation?: Animation | Animation[] | null;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
