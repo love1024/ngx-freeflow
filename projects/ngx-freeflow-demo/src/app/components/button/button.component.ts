@@ -11,8 +11,8 @@ import { styles } from './button.styles';
   selector: '[ff-button]',
   imports: [ContainerComponent, HtmlBlockComponent],
   template: `
-    <svg ff-container [styleSheet]="styles.button">
-      <foreignObject ff-html>
+    <svg ff-container [styleSheet]="styles.button" [class.active]="active">
+      <foreignObject ff-html (click)="onClick()">
         <div class="button-content">{{ text() }}</div>
       </foreignObject>
     </svg>
@@ -38,4 +38,10 @@ export class ButtonComponent extends DocComponent {
   text = input<string>('');
 
   protected styles = styles;
+
+  protected active = true;
+
+  protected onClick() {
+    this.active = !this.active;
+  }
 }

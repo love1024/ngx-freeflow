@@ -25,6 +25,7 @@ export class AnimationGroupComponent {
   });
 
   id = input.required<string>();
+  selector = input<string>();
 
   protected animationComponents = viewChildren(AnimationComponent);
 

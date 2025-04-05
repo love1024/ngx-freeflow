@@ -1,4 +1,4 @@
-@for (shadow of filterService.shadows() | keyvalue; track shadow) {
+@for (shadow of filterService.shadows() | keyvalue; track trackByShadowHash) {
   <svg:filter
     [id]="shadow.key"
     color-interpolation-filters="sRGB"

@@ -1,4 +1,4 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Shadow } from '../interfaces/filter.interface';
 import { hashCode } from '../utils/hash';
 
@@ -6,30 +6,37 @@ import { hashCode } from '../utils/hash';
 export class FilterService {
   public readonly shadows = signal(new Map<number, Shadow>());
 
+  private refs = new Map<number, number>();
+
   addShadow(shadow: Shadow) {
     this.shadows.update(shadows => {
-      const newMap = new Map<number, Shadow>(shadows);
-      newMap.set(this.shadowHash(shadow), shadow);
+      const hash = this.shadowHash(shadow);
 
-      return newMap;
+      this.refs.set(hash, (this.refs.get(hash) ?? 0) + 1);
+
+      return shadows.set(hash, shadow);
     });
   }
 
   deleteShadow(shadow: Shadow) {
     this.shadows.update(shadows => {
-      const newMap = new Map<number, Shadow>(shadows);
-      newMap.set(this.shadowHash(shadow), shadow);
-      newMap.delete(this.shadowHash(shadow));
-      return newMap;
+      const hash = this.shadowHash(shadow);
+
+      // decrease ref count for this shadow
+      this.refs.set(hash, (this.refs.get(hash) ?? 0) - 1);
+
+      // if there are no refs, delete this shadow
+      if (this.refs.get(hash)! <= 0) {
+        shadows.delete(hash);
+      }
+
+      return shadows;
     });
   }
 
   getShadowId(shadow: Shadow) {
-    return computed(() => {
-      const hash = this.shadowHash(shadow);
-
-      return this.shadows().has(hash) ? hash : null;
-    });
+    const hash = this.shadowHash(shadow);
+    return this.shadows().has(hash) ? hash : null;
   }
 
   private shadowHash(shadow: Shadow) {

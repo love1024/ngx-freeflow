@@ -1,16 +1,47 @@
-import { Directive, inject, OnInit, signal, Signal } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  DestroyRef,
+  Directive,
+  inject,
+  Injector,
+  input,
+  OnInit,
+  runInInjectionContext,
+  signal,
+  Signal,
+} from '@angular/core';
 import { AnyViewModel } from '../../core/models/any-view.model';
 import { DocTreeBuilderService } from '../../core/services/doc-tree-builder.service';
+import { UISnapshot } from '../../../public-api';
+import { Subscription } from 'rxjs';
+import { StyleSheet } from '../../core/interfaces/stylesheet.interface';
 
 @Directive()
-export abstract class DocViewComponent<T extends AnyViewModel = AnyViewModel>
-  implements OnInit
+export abstract class DocViewComponent<
+  T extends AnyViewModel = AnyViewModel,
+  U extends StyleSheet = StyleSheet,
+> implements OnInit
 {
-  protected model!: Signal<T>;
+  styleSheetFunction = input<(snapshot: Signal<UISnapshot>) => U>(
+    undefined,
+    // eslint-disable-next-line @angular-eslint/no-input-rename
+    { alias: 'styleSheet' }
+  );
+
+  protected model!: T;
+  protected styleSheet!: U;
+  protected uiSnapshot = signal<UISnapshot>({ classes: new Set() });
+
+  protected subscription = new Subscription();
 
   protected abstract modelFactory(): T;
 
   protected treeManager = inject(DocTreeBuilderService);
+  protected destroyRef = inject(DestroyRef);
+  protected cd = inject(ChangeDetectorRef);
+  protected injector = inject(Injector);
+
+  protected abstract defaultStyleSheet(): U;
 
   protected parent: DocViewComponent | null = inject(DocViewComponent, {
     optional: true,
@@ -18,7 +49,16 @@ export abstract class DocViewComponent<T extends AnyViewModel = AnyViewModel>
   });
 
   ngOnInit(): void {
-    this.model = signal(this.createModel());
+    const styleSheetFunction = this.styleSheetFunction();
+    this.styleSheet = styleSheetFunction
+      ? styleSheetFunction(this.uiSnapshot)
+      : this.defaultStyleSheet();
+
+    runInInjectionContext(this.injector, () => {
+      this.model = this.createModel();
+    });
+
+    this.destroyRef.onDestroy(() => this.subscription.unsubscribe());
   }
 
   protected createModel(): T {

@@ -1,7 +1,7 @@
 import { Component, input } from '@angular/core';
 import { provideComponent } from '../../core/utils/provide-component';
 import { ImageStyleSheet } from '../../core/interfaces/stylesheet.interface';
-import { ImageViewModel } from '../../core/models/image-view.model';
+import { ImageViewModel } from './image-view.model';
 import { DocViewComponent } from '../doc-view/doc-view.component';
 
 @Component({
@@ -11,16 +11,18 @@ import { DocViewComponent } from '../doc-view/doc-view.component';
   templateUrl: './image-view.component.html',
   styleUrl: './image-view.component.css',
   host: {
-    '[attr.width]': 'model().width',
-    '[attr.height]': 'model().width',
-    '[attr.x]': 'model().x',
-    '[attr.y]': 'model().y',
-    '[style.filter]': 'model().filter',
+    '[attr.width]': 'model.width()',
+    '[attr.height]': 'model.width()',
+    '[attr.x]': 'model.x()',
+    '[attr.y]': 'model.y()',
+    '[style.filter]': 'model.filter()',
   },
   providers: [provideComponent(ImageViewComponent)],
 })
-export class ImageViewComponent extends DocViewComponent<ImageViewModel> {
-  styleSheet = input<ImageStyleSheet>({});
+export class ImageViewComponent extends DocViewComponent<
+  ImageViewModel,
+  ImageStyleSheet
+> {
   src = input<string>();
 
   constructor() {
@@ -28,6 +30,10 @@ export class ImageViewComponent extends DocViewComponent<ImageViewModel> {
   }
 
   protected modelFactory(): ImageViewModel {
-    return new ImageViewModel(this, this.styleSheet());
+    return new ImageViewModel(this.styleSheet);
+  }
+
+  protected defaultStyleSheet(): ImageStyleSheet {
+    return {};
   }
 }

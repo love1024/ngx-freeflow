@@ -3,15 +3,15 @@ import {
   Component,
   ElementRef,
   inject,
-  input,
   NgZone,
   OnDestroy,
   OnInit,
 } from '@angular/core';
 import { DocViewComponent } from '../doc-view/doc-view.component';
-import { HtmlViewModel } from '../../core/models/html-view.model';
+
 import { HtmlStyleSheet } from '../../core/interfaces/stylesheet.interface';
 import { provideComponent } from '../../core/utils/provide-component';
+import { HtmlViewModel } from './html-view.model';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -21,19 +21,17 @@ import { provideComponent } from '../../core/utils/provide-component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [provideComponent(HtmlBlockComponent)],
   host: {
-    '[attr.width]': 'model().width',
-    '[attr.height]': 'model().width',
-    '[attr.x]': 'model().x',
-    '[attr.y]': 'model().y',
-    '[style.filter]': 'model().filter',
+    '[attr.width]': 'model.width()',
+    '[attr.height]': 'model.width()',
+    '[attr.x]': 'model.x()',
+    '[attr.y]': 'model.y()',
+    '[style.filter]': 'model.filter()',
   },
 })
 export class HtmlBlockComponent
-  extends DocViewComponent<HtmlViewModel>
+  extends DocViewComponent<HtmlViewModel, HtmlStyleSheet>
   implements OnInit, OnDestroy
 {
-  styleSheet = input<HtmlStyleSheet>({});
-
   private readonly zone = inject(NgZone);
   private readonly host =
     inject<ElementRef<SVGForeignObjectElement>>(ElementRef);
@@ -47,10 +45,12 @@ export class HtmlBlockComponent
   override ngOnInit(): void {
     super.ngOnInit();
 
+    this.treeManager.calculateLayout();
+
     this.resizeObserver = new ResizeObserver(([entry]) => {
       this.zone.run(() => {
         const [box] = entry.borderBoxSize;
-        this.model().setHeight(box.blockSize);
+        this.model.setHeight(box.blockSize);
         this.treeManager.calculateLayout();
       });
     });
@@ -64,7 +64,11 @@ export class HtmlBlockComponent
     this.resizeObserver.disconnect();
   }
 
+  protected defaultStyleSheet(): HtmlStyleSheet {
+    return {};
+  }
+
   protected modelFactory(): HtmlViewModel {
-    return new HtmlViewModel(this, this.styleSheet());
+    return new HtmlViewModel(this.styleSheet);
   }
 }

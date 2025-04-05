@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { RootViewModel } from '../models/root-view.model';
 import { DocViewComponent } from '../../components/doc-view/doc-view.component';
 import { AnyViewModel } from '../models/any-view.model';
+import { RootViewModel } from '../../components/root/root-view.model';
 
 @Injectable({ providedIn: 'root' })
 export class DocTreeBuilderService {

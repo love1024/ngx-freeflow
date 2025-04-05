@@ -1,18 +1,18 @@
 import {
   AfterContentInit,
+  AfterViewChecked,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   inject,
-  input,
+  signal,
 } from '@angular/core';
 
-import { RootViewModel } from '../../core/models/root-view.model';
 import { DocViewComponent } from '../doc-view/doc-view.component';
 import { RootStyleSheet } from '../../core/interfaces/stylesheet.interface';
 import { provideComponent } from '../../core/utils/provide-component';
 import { FilterService } from '../../core/services/filter.service';
 import { KeyValuePipe } from '@angular/common';
+import { RootViewModel } from './root-view.model';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -21,26 +21,35 @@ import { KeyValuePipe } from '@angular/common';
   templateUrl: './root.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[attr.width]': 'model().width',
-    '[attr.height]': 'model().height',
+    '[attr.width]': 'model.width()',
+    '[attr.height]': 'model.height()',
   },
   providers: [provideComponent(RootComponent)],
 })
 export class RootComponent
-  extends DocViewComponent<RootViewModel>
-  implements AfterContentInit
+  extends DocViewComponent<RootViewModel, RootStyleSheet>
+  implements AfterContentInit, AfterViewChecked
 {
-  styleSheet = input.required<RootStyleSheet>();
-
   protected filterService = inject(FilterService);
-  private cd = inject(ChangeDetectorRef);
 
   ngAfterContentInit(): void {
     this.treeManager.root?.calculateLayout();
     this.cd.markForCheck();
   }
 
+  ngAfterViewChecked(): void {
+    this.cd.detectChanges();
+  }
+
   protected modelFactory(): RootViewModel {
-    return new RootViewModel(this, this.styleSheet());
+    return new RootViewModel(this.styleSheet);
+  }
+
+  protected defaultStyleSheet(): RootStyleSheet {
+    return { width: signal(200) };
+  }
+
+  protected trackByShadowHash(_: number, { key }: { key: number }) {
+    return key;
   }
 }

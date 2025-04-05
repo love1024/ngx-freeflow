@@ -11,3 +11,6 @@ export * from './lib/components/html-block/html-block.component';
 export * from './lib/core/utils/provide-component';
 
 export * from './lib/core/interfaces/stylesheet.interface';
+
+export * from './lib/core/interfaces/ui-snapshot.interface';
+export * from './lib/core/utils/ui-snapshot';

@@ -1,38 +1,40 @@
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   computed,
-  DestroyRef,
+  ElementRef,
   inject,
-  input,
   OnDestroy,
   OnInit,
-  viewChild,
+  runInInjectionContext,
+  viewChildren,
 } from '@angular/core';
 import { ContainerStyleSheet } from '../../core/interfaces/stylesheet.interface';
 import { DocViewComponent } from '../doc-view/doc-view.component';
-import { ContainerViewModel } from '../../core/models/container-view.model';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { provideComponent } from '../../core/utils/provide-component';
-import { BlockEvent } from '../../core/models/block-view.model';
 import { FilterService } from '../../core/services/filter.service';
 import { AnimationGroupComponent } from '../animation-group/animation-group.component';
 import { uuid } from '../../core/utils/uuid';
-import { AnimationComponent } from '../animation/animation.component';
+import { pairwise, tap } from 'rxjs';
+import { Shadow } from '../../core/interfaces/filter.interface';
+
+import { ContainerViewModel } from './container-view.model';
+import { KeyValuePipe } from '@angular/common';
+import { uiChanges } from '../../core/utils/ui-changes';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'svg[ff-container]',
-  imports: [AnimationGroupComponent],
+  imports: [AnimationGroupComponent, KeyValuePipe],
   templateUrl: './container.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[attr.width]': 'model().width',
-    '[attr.height]': 'model().height',
-    '[attr.x]': 'model().x',
-    '[attr.y]': 'model().y',
+    '[attr.width]': 'model.width()',
+    '[attr.height]': 'model.height()',
+    '[attr.x]': 'model.x()',
+    '[attr.y]': 'model.y()',
     '(mouseenter)': 'onMouseOver()',
     '(mouseleave)': 'onMouseOut()',
     '(focus)': 'onFocus()',
@@ -51,31 +53,26 @@ import { AnimationComponent } from '../animation/animation.component';
   ],
 })
 export class ContainerComponent
-  extends DocViewComponent<ContainerViewModel>
+  extends DocViewComponent<ContainerViewModel, ContainerStyleSheet>
   implements OnInit, OnDestroy, AfterViewInit
 {
-  styleSheet = input.required<ContainerStyleSheet>();
   protected id = uuid();
 
   protected shadowUrl = computed(() => {
-    const filter = this.model().filter();
+    const filter = this.model.filter();
     if (filter) {
       const shadowId = this.filterService.getShadowId(filter);
-      return `url(#${shadowId()})`;
+      return `url(#${shadowId})`;
     }
 
     return null;
   });
 
-  private animationComponent = viewChild<AnimationComponent>('animation');
-  private hoverAnimationComponent =
-    viewChild<AnimationComponent>('hoverAnimation');
-  private focusAnimationComponent =
-    viewChild<AnimationComponent>('focusAnimation');
+  private animationComponentList =
+    viewChildren<AnimationGroupComponent>('animation');
 
   private filterService = inject(FilterService);
-  private cd = inject(ChangeDetectorRef);
-  private destroyRef = inject(DestroyRef);
+  private hostRef = inject<ElementRef<Element>>(ElementRef);
 
   constructor() {
     super();
@@ -88,66 +85,87 @@ export class ContainerComponent
   override ngOnInit(): void {
     super.ngOnInit();
 
-    this.subscribeToViewUpdates();
-
     this.registerShadows();
   }
 
   ngAfterViewInit(): void {
-    this.animationComponent()?.begin({ reverseOnceComplete: true });
+    const changes$ = uiChanges(this.hostRef.nativeElement);
+    runInInjectionContext(this.injector, () =>
+      changes$
+        .pipe(
+          tap(snapshot => this.uiSnapshot.set(snapshot)),
+          takeUntilDestroyed()
+        )
+        .subscribe()
+    );
+
+    const animationsBySelector = animationGroupHash(
+      this.animationComponentList() as AnimationGroupComponent[]
+    );
+
+    // handle animations
+    runInInjectionContext(this.injector, () =>
+      changes$
+        .pipe(
+          pairwise(),
+          tap(([oldSnapshot, newSnapshot]) => {
+            // compare new shot and old. if old has no selector that appears in new then we should start animations
+            newSnapshot.classes.forEach(c => {
+              if (!oldSnapshot.classes.has(c)) animationsBySelector[c]?.begin();
+            });
+
+            // on the other hand we check if class is dissapear compared to old snapshot, so it's a sign to run back animation
+            oldSnapshot.classes.forEach(c => {
+              if (!newSnapshot.classes.has(c))
+                animationsBySelector[c]?.reverse();
+            });
+          }),
+          takeUntilDestroyed()
+        )
+        .subscribe()
+    );
   }
 
   ngOnDestroy(): void {
-    this.model().destroy();
-  }
-
-  protected onMouseOver() {
-    this.model().triggerBlockEvent(BlockEvent.hoverIn);
-
-    this.hoverAnimationComponent()?.begin();
-  }
-
-  protected onMouseOut() {
-    this.model().triggerBlockEvent(BlockEvent.hoverOut);
-
-    this.hoverAnimationComponent()?.reverse();
-  }
-
-  protected onFocus() {
-    this.model().triggerBlockEvent(BlockEvent.focusIn);
-
-    this.focusAnimationComponent()?.begin();
-  }
-
-  protected onBlur() {
-    this.model().triggerBlockEvent(BlockEvent.focusOut);
-
-    this.focusAnimationComponent()?.reverse();
+    this.model.destroy();
   }
 
   protected modelFactory(): ContainerViewModel {
-    return new ContainerViewModel(this, this.styleSheet());
+    return new ContainerViewModel(this.styleSheet);
   }
 
-  private subscribeToViewUpdates(): void {
-    this.model()
-      .viewUpdate.pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.cd.markForCheck();
-      });
+  protected defaultStyleSheet(): ContainerStyleSheet {
+    return {};
   }
 
   private registerShadows() {
-    const shadows = [
-      this.styleSheet().boxShadow,
-      this.styleSheet().onHover?.boxShadow,
-      this.styleSheet().onFocus?.boxShadow,
-    ];
+    runInInjectionContext(this.injector, () => {
+      toObservable(this.model.filter)
+        .pipe(
+          pairwise(),
+          tap(([oldShadow, newShadow]) => {
+            if (newShadow && !oldShadow) {
+              this.filterService.addShadow(newShadow as Shadow);
+            }
+            if (!newShadow && oldShadow) {
+              this.filterService.deleteShadow(oldShadow as Shadow);
+            }
+          }),
+          takeUntilDestroyed()
+        )
+        .subscribe();
+    });
+  }
+}
 
-    for (const shadow of shadows) {
-      if (shadow) {
-        this.filterService.addShadow(shadow);
-      }
+function animationGroupHash(groups: AnimationGroupComponent[]) {
+  const animationsBySelector: Record<string, AnimationGroupComponent> = {};
+  for (const g of groups) {
+    const selector = g.selector();
+    if (selector) {
+      animationsBySelector[selector] = g;
     }
   }
+
+  return animationsBySelector;
 }
