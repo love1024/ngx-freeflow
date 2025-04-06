@@ -55,7 +55,7 @@
       "prefix": "ffd",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@ng-doc/builder:application",
           "options": {
             "outputPath": "dist/ngx-freeflow-demo",
             "index": "projects/ngx-freeflow-demo/src/index.html",
@@ -66,11 +66,32 @@
             "assets": [
               {
                 "glob": "**/*",
+                "input": "node_modules/@ng-doc/app/assets",
+                "output": "assets/ng-doc/app"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@ng-doc/ui-kit/assets",
+                "output": "assets/ng-doc/ui-kit"
+              },
+              {
+                "glob": "**/*",
+                "input": "ng-doc/ngx-freeflow-demo/assets",
+                "output": "assets/ng-doc"
+              },
+              {
+                "glob": "**/*",
                 "input": "projects/ngx-freeflow-demo/public"
               }
             ],
-            "styles": ["projects/ngx-freeflow-demo/src/styles.scss"],
-            "scripts": []
+            "styles": [
+              "node_modules/@ng-doc/app/styles/global.css",
+              "projects/ngx-freeflow-demo/src/styles.scss"
+            ],
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "@ng-doc/core"
+            ]
           },
           "configurations": {
             "production": {
@@ -97,7 +118,7 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@ng-doc/builder:dev-server",
           "configurations": {
             "production": {
               "buildTarget": "ngx-freeflow-demo:build:production"

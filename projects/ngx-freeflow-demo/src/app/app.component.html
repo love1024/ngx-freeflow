@@ -1,6 +1,9 @@
-<h1>SVG</h1>
-<svg ff-root [styleSheet]="svgStyles.root">
-  <svg ff-container [styleSheet]="svgStyles.container">
-    <svg ff-form></svg>
-  </svg>
-</svg>
+<ng-doc-root>
+  <ng-doc-navbar>
+    <h3 style="margin: 0" ngDocNavbarLeft>NgxFreeflow</h3>
+  </ng-doc-navbar>
+  <ng-doc-sidebar></ng-doc-sidebar>
+  <div [@routingAnimation]="routingAnimations">
+    <router-outlet></router-outlet>
+  </div>
+</ng-doc-root>

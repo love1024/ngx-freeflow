@@ -10,6 +10,12 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
+      "@ng-doc/generated": [
+        "./ng-doc/ngx-freeflow-demo/index.ts"
+      ],
+      "@ng-doc/generated/*": [
+        "./ng-doc/ngx-freeflow-demo/*"
+      ],
       "ngx-freeflow-lib": ["./dist/ngx-freeflow-lib"]
     },
     "skipLibCheck": true,
