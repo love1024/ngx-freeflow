@@ -1,17 +1,15 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Signal,
   computed,
   signal,
 } from '@angular/core';
 import {
   ContainerComponent,
-  ContainerStyleSheet,
+  ContainerStyleSheetFn,
   HtmlBlockComponent,
   RootComponent,
-  RootStyleSheet,
-  UISnapshot,
+  RootStyleSheetFn,
   hasClasses,
 } from 'ngx-freeflow-lib';
 
@@ -23,32 +21,28 @@ import {
   imports: [RootComponent, ContainerComponent, HtmlBlockComponent],
 })
 export class DocDemoComponent {
-  protected styles = styles;
+  protected styles = { root, container };
 }
 
-const styles = {
-  root: () =>
-    ({
-      width: signal(200),
-    }) satisfies RootStyleSheet,
+const root: RootStyleSheetFn = () => ({
+  width: signal(200),
+});
 
-  container: (snapshot: Signal<UISnapshot>) =>
-    ({
-      width: signal(180),
-      borderRadius: signal(5),
-      backgroundColor: signal('rgb(30 30 30)'),
-      marginBottom: signal(10),
-      boxShadow: computed(() => {
-        if (hasClasses(snapshot(), ':hover')) {
-          return {
-            hOffset: 3,
-            vOffset: 5,
-            blur: 3,
-            color: 'rgb(255 0 0 / 0.4)',
-          };
-        }
+const container: ContainerStyleSheetFn = snapshot => ({
+  width: signal(180),
+  borderRadius: signal(5),
+  backgroundColor: signal('rgb(30 30 30)'),
+  marginBottom: signal(10),
+  boxShadow: computed(() => {
+    if (hasClasses(snapshot(), ':hover')) {
+      return {
+        hOffset: 3,
+        vOffset: 5,
+        blur: 3,
+        color: 'rgb(255 0 0 / 0.4)',
+      };
+    }
 
-        return null;
-      }),
-    }) satisfies ContainerStyleSheet,
-};
+    return null;
+  }),
+});

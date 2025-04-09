@@ -6,6 +6,7 @@ import {
   NgZone,
   OnDestroy,
   OnInit,
+  viewChild,
 } from '@angular/core';
 import { DocViewComponent } from '../doc-view/doc-view.component';
 
@@ -36,6 +37,9 @@ export class HtmlBlockComponent
   private readonly host =
     inject<ElementRef<SVGForeignObjectElement>>(ElementRef);
 
+  private readonly wrapperRef =
+    viewChild<ElementRef<HTMLDivElement>>('wrapper');
+
   private resizeObserver!: ResizeObserver;
 
   constructor() {
@@ -54,7 +58,7 @@ export class HtmlBlockComponent
         this.treeManager.calculateLayout();
       });
     });
-    const el = this.host.nativeElement.firstElementChild;
+    const el = this.wrapperRef()?.nativeElement;
     if (el) {
       this.resizeObserver.observe(el);
     }

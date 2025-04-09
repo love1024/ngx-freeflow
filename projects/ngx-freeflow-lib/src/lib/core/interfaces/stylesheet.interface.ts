@@ -47,6 +47,3 @@ export interface ContainerStyleSheet extends BlockStyleSheet {
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface HtmlStyleSheet extends BlockStyleSheet {}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface ImageStyleSheet extends BlockStyleSheet {}
