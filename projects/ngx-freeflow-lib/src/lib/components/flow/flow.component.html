@@ -5,14 +5,11 @@
   [attr.width]="flowWidth"
   [attr.height]="flowHeight">
   <svg:g>
-    @let template = nodeTemplate();
-    @if (template) {
-      @for (node of nodes(); track node) {
-        <svg:g
-          [node]="node"
-          [nodeTemplate]="template"
-          (mousedown)="draggableContext()?.onDragStart(node, $event)" />
-      }
+    @for (node of nodes(); track node.id) {
+      <svg:g
+        [node]="node"
+        [nodeTemplate]="nodeTemplate"
+        (mousedown)="draggableContext()?.onDragStart(node, $event)" />
     }
   </svg:g>
 </svg:svg>

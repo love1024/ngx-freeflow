@@ -25,7 +25,15 @@ export class FlowComponent {
   background = input<string>('#ffffff');
 
   draggableContext = viewChild(DraggableContextDirective);
-  nodeTemplate = contentChild<TemplateRef<unknown>>('nodeTemplate');
+  private _nodeTemplate = contentChild<TemplateRef<unknown>>('nodeTemplate');
+
+  get nodeTemplate() {
+    const template = this._nodeTemplate();
+    if (!template) {
+      throw new Error('nodeTemplate is required but was not provided');
+    }
+    return template;
+  }
 
   get flowWidth() {
     return this.view() === 'auto' ? '100%' : this.view()[0];

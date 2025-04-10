@@ -18,10 +18,12 @@ export class RootViewModel extends AnyViewModel {
   public calculateLayout(): void {
     this.children.forEach(c => c.calculateLayout());
 
+    console.log('GOING FO RHEIGHT FROM ROOT');
     this.setHeight();
   }
 
   private setHeight() {
+    console.log('RootViewModel', this.styleSheet.height());
     if (this.styleSheet.height()) {
       this.height.set(this.styleSheet.height());
     } else {

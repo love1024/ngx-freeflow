@@ -135,7 +135,6 @@ export class ContainerComponent
   }
 
   private registerShadows() {
-    console.log(this.model.filter());
     runInInjectionContext(this.injector, () => {
       toObservable(this.model.filter)
         .pipe(

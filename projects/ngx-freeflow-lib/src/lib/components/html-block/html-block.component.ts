@@ -23,7 +23,7 @@ import { HtmlViewModel } from './html-view.model';
   providers: [provideComponent(HtmlBlockComponent)],
   host: {
     '[attr.width]': 'model.width()',
-    '[attr.height]': 'model.width()',
+    '[attr.height]': 'model.height()',
     '[attr.x]': 'model.x()',
     '[attr.y]': 'model.y()',
     '[style.filter]': 'model.filter()',
@@ -34,8 +34,6 @@ export class HtmlBlockComponent
   implements OnInit, OnDestroy
 {
   private readonly zone = inject(NgZone);
-  private readonly host =
-    inject<ElementRef<SVGForeignObjectElement>>(ElementRef);
 
   private readonly wrapperRef =
     viewChild<ElementRef<HTMLDivElement>>('wrapper');
@@ -54,6 +52,7 @@ export class HtmlBlockComponent
     this.resizeObserver = new ResizeObserver(([entry]) => {
       this.zone.run(() => {
         const [box] = entry.borderBoxSize;
+        console.log('SETTING', box.blockSize);
         this.model.setHeight(box.blockSize);
         this.treeManager.calculateLayout();
       });

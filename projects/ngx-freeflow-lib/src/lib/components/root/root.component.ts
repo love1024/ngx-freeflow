@@ -3,7 +3,6 @@ import {
   AfterViewChecked,
   ChangeDetectionStrategy,
   Component,
-  effect,
   inject,
   signal,
 } from '@angular/core';
@@ -32,13 +31,6 @@ export class RootComponent
   implements AfterContentInit, AfterViewChecked
 {
   protected filterService = inject(FilterService);
-
-  constructor() {
-    super();
-    effect(() => {
-      console.log(this.filterService.shadows());
-    });
-  }
 
   ngAfterContentInit(): void {
     this.treeManager.root?.calculateLayout();

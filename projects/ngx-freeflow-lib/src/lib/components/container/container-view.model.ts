@@ -46,5 +46,6 @@ export class ContainerViewModel extends BlockViewModel {
     super();
 
     this.styleSheet = styleSheetWithDefaults(styleSheet);
+    console.log('ContainerViewModel', this.styleSheet);
   }
 }
