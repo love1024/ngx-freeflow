@@ -13,6 +13,7 @@ import { provideComponent } from '../../core/utils/provide-component';
 import { FilterService } from '../../core/services/filter.service';
 import { KeyValuePipe } from '@angular/common';
 import { RootViewModel } from './root-view.model';
+import { DocTreeBuilderService } from '../../core/services/doc-tree-builder.service';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -24,7 +25,7 @@ import { RootViewModel } from './root-view.model';
     '[attr.width]': 'model.width()',
     '[attr.height]': 'model.height()',
   },
-  providers: [provideComponent(RootComponent)],
+  providers: [provideComponent(RootComponent), DocTreeBuilderService],
 })
 export class RootComponent
   extends DocViewComponent<RootViewModel, RootStyleSheet>

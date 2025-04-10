@@ -13,6 +13,8 @@ import { DocViewComponent } from '../doc-view/doc-view.component';
 import { HtmlStyleSheet } from '../../core/interfaces/stylesheet.interface';
 import { provideComponent } from '../../core/utils/provide-component';
 import { HtmlViewModel } from './html-view.model';
+import { resizable } from '../../core/utils/resizable';
+import { tap } from 'rxjs';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -40,27 +42,29 @@ export class HtmlBlockComponent
 
   private resizeObserver!: ResizeObserver;
 
-  constructor() {
-    super();
-  }
-
   override ngOnInit(): void {
     super.ngOnInit();
 
+    const el = this.wrapperRef()?.nativeElement;
+    if (!el) {
+      return;
+    }
+
     this.treeManager.calculateLayout();
 
-    this.resizeObserver = new ResizeObserver(([entry]) => {
-      this.zone.run(() => {
-        const [box] = entry.borderBoxSize;
-        console.log('SETTING', box.blockSize);
-        this.model.setHeight(box.blockSize);
-        this.treeManager.calculateLayout();
-      });
-    });
-    const el = this.wrapperRef()?.nativeElement;
-    if (el) {
-      this.resizeObserver.observe(el);
-    }
+    this.subscription.add(
+      resizable(el, this.zone)
+        .pipe(
+          tap(entry => {
+            const [box] = entry.borderBoxSize;
+            this.model.setHeight(box.blockSize);
+
+            // TODO research how to avoid needless calls
+            this.treeManager.calculateLayout();
+          })
+        )
+        .subscribe()
+    );
   }
 
   ngOnDestroy(): void {

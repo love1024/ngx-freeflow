@@ -3,7 +3,7 @@ import { DocViewComponent } from '../../components/doc-view/doc-view.component';
 import { AnyViewModel } from '../models/any-view.model';
 import { RootViewModel } from '../../components/root/root-view.model';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class DocTreeBuilderService {
   public root: RootViewModel | null = null;
   private componentMap = new Map<DocViewComponent, AnyViewModel>();
