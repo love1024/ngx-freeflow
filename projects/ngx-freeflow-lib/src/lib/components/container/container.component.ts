@@ -35,10 +35,6 @@ import { uiChanges } from '../../core/utils/ui-changes';
     '[attr.height]': 'model.height()',
     '[attr.x]': 'model.x()',
     '[attr.y]': 'model.y()',
-    '(mouseenter)': 'onMouseOver()',
-    '(mouseleave)': 'onMouseOut()',
-    '(focus)': 'onFocus()',
-    '(blur)': 'onBlur()',
   },
   providers: [provideComponent(ContainerComponent)],
   styles: [
@@ -139,6 +135,7 @@ export class ContainerComponent
   }
 
   private registerShadows() {
+    console.log(this.model.filter());
     runInInjectionContext(this.injector, () => {
       toObservable(this.model.filter)
         .pipe(

@@ -1,0 +1,11 @@
+<ff-flow [nodes]="nodes" [view]="[500, 500]">
+  <ng-template #nodeTemplate>
+    <svg:svg ff-root [styleSheet]="styles.root">
+      <svg:svg ff-container [styleSheet]="styles.container">
+        <svg:foreignObject ff-html>
+          <div class="content">I'm a custom block</div>
+        </svg:foreignObject>
+      </svg:svg>
+    </svg:svg>
+  </ng-template>
+</ff-flow>

@@ -1,0 +1,15 @@
+@if (node().type === 'default') {
+  <svg:rect
+    width="50"
+    height="50"
+    [attr.x]="node().position.x"
+    [attr.y]="node().position.y"></svg:rect>
+} @else if (node().type === 'custom') {
+  <svg:svg [attr.x]="node().position.x" [attr.y]="node().position.y">
+    <ng-container
+      *ngTemplateOutlet="
+        nodeTemplate();
+        context: { $implicity: node() }
+      "></ng-container>
+  </svg:svg>
+}
