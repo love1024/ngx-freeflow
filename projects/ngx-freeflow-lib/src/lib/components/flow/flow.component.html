@@ -1,15 +1,12 @@
 <svg:svg
+  class="root-svg"
   #flow
-  draggableContext
   [style.backgroundColor]="background()"
   [attr.width]="flowWidth"
   [attr.height]="flowHeight">
-  <svg:g>
-    @for (node of nodes(); track node.id) {
-      <svg:g
-        [node]="node"
-        [nodeTemplate]="nodeTemplate"
-        (mousedown)="draggableContext()?.onDragStart(node, $event)" />
+  <svg:g mapContext [minZoom]="minZoom()" [maxZoom]="maxZoom()">
+    @for (node of nodes(); track node.node.id) {
+      <svg:g node [nodeModel]="node" [nodeTemplate]="nodeTemplate" />
     }
   </svg:g>
 </svg:svg>

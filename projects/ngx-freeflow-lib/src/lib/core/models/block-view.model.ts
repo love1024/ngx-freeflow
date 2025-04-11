@@ -67,7 +67,6 @@ export abstract class BlockViewModel extends AnyViewModel {
   public abstract override styleSheet: Required<BlockStyleSheet>;
 
   calculateLayout() {
-    console.log('CONTAINER', this.styleSheet.height());
     this.children.forEach(c => c.calculateLayout());
 
     this.calculateHeight();
@@ -118,7 +117,6 @@ export abstract class BlockViewModel extends AnyViewModel {
   }
 
   protected calculateHeight() {
-    console.log('CALCULATING', this.styleSheet.height());
     if (this.styleSheet.height()) {
       this.height.set(this.styleSheet.height());
     } else {
