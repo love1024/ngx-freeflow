@@ -2,10 +2,12 @@ import { computed, signal } from '@angular/core';
 import { Node } from '../interfaces/node.interface';
 import { FlowModel } from './flow.model';
 
-export class NodeModel {
+export class NodeModel<T = unknown> {
   public point = signal({ x: 0, y: 0 });
 
   public size = signal({ width: 0, height: 0 });
+
+  public data?: T;
 
   public pointTransform = computed(
     () => `translate(${this.point().x}, ${this.point().y})`
