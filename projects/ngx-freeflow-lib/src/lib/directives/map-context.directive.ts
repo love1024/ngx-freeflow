@@ -3,14 +3,14 @@ import {
   effect,
   ElementRef,
   inject,
-  Injector,
   input,
   OnInit,
-  runInInjectionContext,
 } from '@angular/core';
-import { ZoomService } from '../core/services/zoom.service';
 import { select } from 'd3-selection';
-import { D3ZoomEvent, zoom, ZoomBehavior } from 'd3-zoom';
+import { D3ZoomEvent, zoom, ZoomBehavior, zoomIdentity } from 'd3-zoom';
+import { RootSvgReferenceDirective } from './reference.directive';
+import { ViewportService } from '../core/services/viewport.service';
+import { isDefined } from '../core/utils/is-defined';
 
 type ZoomEvent = D3ZoomEvent<SVGSVGElement, unknown>;
 
@@ -20,20 +20,55 @@ export class MapContextDirective implements OnInit {
   public minZoom = input.required<number>();
   public maxZoom = input.required<number>();
 
-  private get zoomableElement() {
-    return this.hostRef.nativeElement;
-  }
+  protected rootSvg = inject(RootSvgReferenceDirective).element;
+  protected host = inject<ElementRef<SVGGElement>>(ElementRef).nativeElement;
+  protected viewportService = inject(ViewportService);
 
-  private get rootSvgElement() {
-    return this.zoomableElement.parentElement as Element as SVGSVGElement;
-  }
+  private rootSvgSelection = select(this.rootSvg);
+  private zoomableSelection = select(this.host);
 
-  private hostRef = inject<ElementRef<SVGElement>>(ElementRef);
-  private zoomService = inject(ZoomService);
-  private injector = inject(Injector);
+  // under the hood this effect triggers handleZoom, so error throws without this flag
+  // TODO: hack with timer fixes wrong node scaling (handle positions not matched with content size)
+  protected manualViewportChangeEffect = effect(() =>
+    setTimeout(() => {
+      const viewport = this.viewportService.writableViewport();
+      const state = viewport.state;
 
-  private rootSvgSelection = select(this.rootSvgElement);
-  private zoomableSelection = select(this.zoomableElement);
+      if (viewport.changeType === 'initial') {
+        return;
+      }
+
+      // If only zoom provided
+      if (isDefined(state.zoom) && !isDefined(state.x) && !isDefined(state.y)) {
+        this.rootSvgSelection.call(this.zoomBehavior.scaleTo, state.zoom);
+
+        return;
+      }
+
+      // If only pan provided
+      if (isDefined(state.x) && isDefined(state.y) && !isDefined(state.zoom)) {
+        this.rootSvgSelection.call(
+          this.zoomBehavior.translateTo,
+          state.x,
+          state.y
+        );
+
+        return;
+      }
+
+      // If whole viewort state provided
+      if (isDefined(state.x) && isDefined(state.y) && isDefined(state.zoom)) {
+        this.rootSvgSelection.call(
+          this.zoomBehavior.transform,
+          zoomIdentity.translate(state.x, state.y).scale(state.zoom)
+        );
+
+        return;
+      }
+    })
+  );
+
+  protected zoomBehavior!: ZoomBehavior<SVGSVGElement, unknown>;
 
   ngOnInit() {
     const zoomBehaviour = zoom<SVGSVGElement, unknown>()
@@ -41,40 +76,15 @@ export class MapContextDirective implements OnInit {
       .on('zoom', evt => this.handleZoom(evt));
 
     this.rootSvgSelection.call(zoomBehaviour);
-
-    runInInjectionContext(this.injector, () => {
-      this.manualZoomChangeEffect(zoomBehaviour);
-      this.manualPanChangeEffect(zoomBehaviour);
-    });
   }
 
   handleZoom({ transform }: ZoomEvent) {
-    this.zoomService.zoomPan.set({
+    this.viewportService.readableViewport.set({
       zoom: transform.k,
       x: transform.x,
       y: transform.y,
     });
 
     this.zoomableSelection.attr('transform', transform.toString());
-  }
-
-  private manualZoomChangeEffect(
-    behavior: ZoomBehavior<SVGSVGElement, unknown>
-  ) {
-    effect(() => {
-      this.rootSvgSelection.call(behavior.scaleTo, this.zoomService.zoom());
-    });
-  }
-
-  private manualPanChangeEffect(
-    behavior: ZoomBehavior<SVGSVGElement, unknown>
-  ) {
-    effect(() => {
-      this.rootSvgSelection.call(
-        behavior.translateTo,
-        this.zoomService.pan().x,
-        this.zoomService.pan().y
-      );
-    });
   }
 }
