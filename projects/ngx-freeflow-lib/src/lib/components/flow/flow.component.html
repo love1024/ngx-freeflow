@@ -1,12 +1,41 @@
 <svg:svg
+  rootSvgRef
+  rootSvgContext
   class="root-svg"
   #flow
   [style.backgroundColor]="background()"
-  [attr.width]="flowWidth"
-  [attr.height]="flowHeight">
-  <svg:g mapContext [minZoom]="minZoom()" [maxZoom]="maxZoom()">
-    @for (node of nodes(); track node.node.id) {
-      <svg:g node [nodeModel]="node" [nodeTemplate]="nodeTemplate" />
+  [attr.width]="flowModel.flowWidth()"
+  [attr.height]="flowModel.flowHeight()">
+  <defs [markers]="markers()" flowDefs />
+
+  <svg:g
+    mapContext
+    spacePointContext
+    [minZoom]="minZoom()"
+    [maxZoom]="maxZoom()">
+    <!-- Connection -->
+    <svg:g
+      connection
+      [model]="connection"
+      [template]="connectionTemplateDirective?.templateRef" />
+
+    <!-- Edges  -->
+    @for (model of edgeModels; track model) {
+      <svg:g
+        edge
+        [model]="model"
+        [edgeTemplate]="edgeTemplateDirective?.templateRef"
+        [edgeLabelHtmlTemplate]="edgeLabelHtmlDirective?.templateRef" />
+    }
+
+    <!-- Nodes -->
+    @for (model of nodeModels; track model) {
+      <svg:g
+        node
+        [nodeModel]="model"
+        [nodeHtmlTemplate]="nodeHtmlDirective?.templateRef"
+        [handleTemplate]="handleTemplateDirective?.templateRef"
+        [attr.transform]="model.pointTransform()" />
     }
   </svg:g>
 </svg:svg>
