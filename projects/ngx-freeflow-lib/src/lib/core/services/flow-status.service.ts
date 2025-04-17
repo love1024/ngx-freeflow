@@ -43,7 +43,7 @@ export class FlowStatusService {
     payload: null,
   });
 
-  public setIdelStatus() {
+  public setIdleStatus() {
     this.status.set({
       state: 'idle',
       payload: null,

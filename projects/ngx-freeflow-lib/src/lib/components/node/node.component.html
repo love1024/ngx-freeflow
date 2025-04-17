@@ -1,17 +1,66 @@
+@let htmlTeplate = nodeTemplate();
+@let handleHtmlTemplate = handleTemplate();
+
 @if (nodeModel().node.type === 'default') {
-  <svg:rect
-    width="50"
-    height="50"
-    [attr.x]="nodeModel().position().x"
-    [attr.y]="nodeModel().position().y"></svg:rect>
-} @else if (nodeModel().node.type === 'custom') {
-  <svg:svg
-    [attr.x]="nodeModel().position().x"
-    [attr.y]="nodeModel().position().y">
+  <svg:rect #nodeContent width="50" height="50" />
+} @else if (nodeModel().node.type === 'html-template' && htmlTeplate) {
+  <svg:foreignObject
+    [attr.width]="nodeModel().size().width"
+    [attr.height]="nodeModel().size().height">
+    <div #htmlWrapper class="wrapper">
+      <ng-container
+        *ngTemplateOutlet="
+          htmlTeplate;
+          context: { $implicit: nodeModel().node }
+        "></ng-container>
+    </div>
+  </svg:foreignObject>
+}
+
+@if (handleHtmlTemplate) {
+  <svg:g #sourceHandle (mousedown)="startConnection($event)">
     <ng-container
       *ngTemplateOutlet="
-        nodeTemplate();
-        context: { $implicity: nodeModel().node }
-      "></ng-container>
-  </svg:svg>
+        handleHtmlTemplate;
+        context: getHandleContext('source')
+      " />
+  </svg:g>
+
+  <svg:g #targetHandle>
+    <ng-container
+      *ngTemplateOutlet="
+        handleHtmlTemplate;
+        context: getHandleContext('target')
+      " />
+  </svg:g>
+} @else {
+  <svg:circle
+    #sourceHandle
+    [attr.cx]="nodeModel().sourceOffset().x"
+    [attr.cy]="nodeModel().sourceOffset().y"
+    r="5"
+    stroke="white"
+    stroke-width="3"
+    fill="red"
+    (mousedown)="startConnection($event)" />
+
+  <svg:circle
+    #targetHandle
+    [attr.cx]="nodeModel().targetOffset().x"
+    [attr.cy]="nodeModel().targetOffset().y"
+    r="5"
+    stroke="white"
+    fill="red"
+    (mouseup)="endConnection()" />
+}
+
+@if (showMagnet()) {
+  <svg:circle
+    class="magnet"
+    [attr.r]="nodeModel().magnetRadius"
+    [attr.cx]="nodeModel().targetOffset().x"
+    [attr.cy]="nodeModel().targetOffset().y"
+    (mouseup)="endConnection(); resetValidateTargetHandle()"
+    (mouseover)="validateTargetHandle()"
+    (mouseout)="resetValidateTargetHandle()" />
 }

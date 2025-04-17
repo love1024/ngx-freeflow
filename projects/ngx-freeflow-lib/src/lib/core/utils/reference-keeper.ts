@@ -4,13 +4,14 @@ import { EdgeModel } from '../models/edge.model';
 import { NodeModel } from '../models/node.model';
 
 export class ReferenceKeeper {
-  public static ndoes(newNodes: Node[], oldModels: NodeModel[]) {
+  public static nodes(newNodes: Node[], oldModels: NodeModel[]) {
     const oldNodesMap = new Map<Node, NodeModel>();
     oldModels.forEach(model => oldNodesMap.set(model.node, model));
 
     return newNodes.map(node => {
-      if (oldNodesMap.has(node)) {
-        return oldNodesMap.get(node);
+      const existingNode = oldNodesMap.get(node);
+      if (existingNode) {
+        return existingNode;
       }
       return new NodeModel(node);
     });
@@ -21,8 +22,9 @@ export class ReferenceKeeper {
     oldModels.forEach(model => oldEdgesMap.set(model.edge, model));
 
     return newEdges.map(edge => {
-      if (oldEdgesMap.has(edge)) {
-        return oldEdgesMap.get(edge);
+      const existingEdge = oldEdgesMap.get(edge);
+      if (existingEdge) {
+        return existingEdge;
       }
       return new EdgeModel(edge);
     });

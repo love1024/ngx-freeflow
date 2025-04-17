@@ -3,6 +3,6 @@ import { Point } from './point.interface';
 export interface Node<T = unknown> {
   id: string;
   point: Point;
-  type: 'default' | 'custom';
+  type: 'default' | 'html-template';
   data?: T;
 }

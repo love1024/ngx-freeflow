@@ -105,7 +105,7 @@ export class NodeModel<T = unknown> {
 
   public readonly magnetRadius = 20;
   private flow!: FlowModel;
-  constructor(public node: Node) {
+  constructor(public node: Node<T>) {
     this.point.set(node.point);
   }
 
