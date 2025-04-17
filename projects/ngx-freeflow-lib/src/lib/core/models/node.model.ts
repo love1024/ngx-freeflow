@@ -13,8 +13,12 @@ export class NodeModel<T = unknown> {
     () => `translate(${this.point().x}, ${this.point().y})`
   );
 
-  public sourcePosition = computed(() => this.flow.handlePositions().source);
-  public targetPosition = computed(() => this.flow.handlePositions().target);
+  public sourcePosition = computed(
+    () => this.flow?.handlePositions().source ?? 'left'
+  );
+  public targetPosition = computed(
+    () => this.flow?.handlePositions().target ?? 'right'
+  );
 
   public sourceHandleSize = signal({ width: 0, height: 0 });
   public targetHandleSize = signal({ width: 0, height: 0 });
@@ -32,6 +36,7 @@ export class NodeModel<T = unknown> {
       case 'bottom':
         return { x: width / 2, y: height };
     }
+    return { x: 0, y: 0 };
   });
 
   public targetOffset = computed(() => {
@@ -47,6 +52,7 @@ export class NodeModel<T = unknown> {
       case 'bottom':
         return { x: width / 2, y: height };
     }
+    return { x: 0, y: 0 };
   });
 
   public sourceHandleOffset = computed(() => {
@@ -60,6 +66,7 @@ export class NodeModel<T = unknown> {
       case 'bottom':
         return { x: 0, y: this.sourceHandleSize().height / 2 };
     }
+    return { x: 0, y: 0 };
   });
 
   public targetHandleOffset = computed(() => {
@@ -73,6 +80,7 @@ export class NodeModel<T = unknown> {
       case 'bottom':
         return { x: 0, y: this.targetHandleSize().height / 2 };
     }
+    return { x: 0, y: 0 };
   });
 
   public sourcePointAbsolute = computed(() => {
@@ -104,7 +112,7 @@ export class NodeModel<T = unknown> {
   });
 
   public readonly magnetRadius = 20;
-  private flow!: FlowModel;
+  private flow?: FlowModel;
   constructor(public node: Node<T>) {
     this.point.set(node.point);
   }

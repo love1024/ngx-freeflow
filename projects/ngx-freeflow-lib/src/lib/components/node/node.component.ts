@@ -14,7 +14,7 @@ import {
 import { NgTemplateOutlet } from '@angular/common';
 import { NodeModel } from '../../core/models/node.model';
 import { DraggableService } from '../../core/services/draggable.service';
-import { ContainerComponent } from '../container/container.component';
+
 import {
   batchStatusChanges,
   FlowStatusService,
@@ -26,8 +26,9 @@ export type HandleState = 'valid' | 'invalid' | 'idle';
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'g[node]',
-  imports: [NgTemplateOutlet, ContainerComponent],
+  imports: [NgTemplateOutlet],
   templateUrl: './node.component.html',
+  providers: [FlowStatusService, FlowEntitiesService],
 })
 export class NodeComponent implements OnInit, OnDestroy, AfterViewInit {
   nodeModel = input.required<NodeModel>();

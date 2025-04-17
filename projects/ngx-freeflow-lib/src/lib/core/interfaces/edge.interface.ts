@@ -10,7 +10,7 @@ export interface Edge<T = unknown> extends Connection {
   type?: EdgeType;
   curve?: Curve;
   data?: T;
-  edgeLabels?: Record<EdgeLabelPosition, EdgeLabel>;
+  edgeLabels?: Record<EdgeLabelPosition, EdgeLabel | undefined>;
   markers?: {
     start?: Marker;
     end?: Marker;

@@ -13,11 +13,11 @@ export class DraggableService {
 
     const dragBehaviour = drag()
       .on('start', (event: DragEvent) => {
-        deltaX = model.position().x - event.x;
-        deltaY = model.position().y - event.y;
+        deltaX = model.point().x - event.x;
+        deltaY = model.point().y - event.y;
       })
       .on('drag', (event: DragEvent) => {
-        model.position.set({ x: event.x + deltaX, y: event.y + deltaY });
+        model.point.set({ x: event.x + deltaX, y: event.y + deltaY });
       });
 
     d3Element.call(dragBehaviour);

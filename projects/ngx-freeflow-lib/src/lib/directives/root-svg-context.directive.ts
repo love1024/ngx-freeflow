@@ -7,6 +7,7 @@ import { FlowStatusService } from '../core/services/flow-status.service';
   host: {
     '(document:mouseup)': 'resetConnection()',
   },
+  providers: [FlowStatusService],
 })
 export class RootSvgContextDirective {
   private flowStatusService = inject(FlowStatusService);
@@ -14,7 +15,7 @@ export class RootSvgContextDirective {
   protected resetConnection() {
     const status = this.flowStatusService.status();
     if (status.state === 'connection-start') {
-      this.flowStatusService.setIdelStatus();
+      this.flowStatusService.setIdleStatus();
     }
   }
 }

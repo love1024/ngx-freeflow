@@ -6,7 +6,7 @@ import { RootSvgReferenceDirective } from './reference.directive';
 
 // eslint-disable-next-line @angular-eslint/directive-selector
 @Directive({ selector: 'g[spacePointContext]' })
-export class NameDirective {
+export class SpacePointContextDirective {
   public svgCurrentSpacePoint: Signal<Point> = computed(() => {
     const movement = this.mouseMovement();
 

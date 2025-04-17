@@ -15,7 +15,7 @@ import { isDefined } from '../core/utils/is-defined';
 type ZoomEvent = D3ZoomEvent<SVGSVGElement, unknown>;
 
 // eslint-disable-next-line @angular-eslint/directive-selector
-@Directive({ selector: 'g[mapContext]' })
+@Directive({ selector: 'g[mapContext]', providers: [ViewportService] })
 export class MapContextDirective implements OnInit {
   public minZoom = input.required<number>();
   public maxZoom = input.required<number>();

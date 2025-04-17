@@ -14,18 +14,22 @@
     [minZoom]="minZoom()"
     [maxZoom]="maxZoom()">
     <!-- Connection -->
-    <svg:g
-      connection
-      [model]="connection"
-      [template]="connectionTemplateDirective?.templateRef" />
+
+    @let conn = connection();
+    @if (conn) {
+      <svg:g
+        connection
+        [model]="conn"
+        [template]="connectionTemplateDirective()?.templateRef" />
+    }
 
     <!-- Edges  -->
     @for (model of edgeModels; track model) {
       <svg:g
         edge
         [model]="model"
-        [edgeTemplate]="edgeTemplateDirective?.templateRef"
-        [edgeLabelHtmlTemplate]="edgeLabelHtmlDirective?.templateRef" />
+        [edgeTemplate]="edgeTemplateDirective()?.templateRef"
+        [edgeLabelHtmlTemplate]="edgeLabelHtmlDirective()?.templateRef" />
     }
 
     <!-- Nodes -->
@@ -33,8 +37,8 @@
       <svg:g
         node
         [nodeModel]="model"
-        [nodeHtmlTemplate]="nodeHtmlDirective?.templateRef"
-        [handleTemplate]="handleTemplateDirective?.templateRef"
+        [nodeTemplate]="nodeHtmlDirective()?.templateRef"
+        [handleTemplate]="handleTemplateDirective()?.templateRef"
         [attr.transform]="model.pointTransform()" />
     }
   </svg:g>

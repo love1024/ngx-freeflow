@@ -6,6 +6,7 @@ import { FlowEntitiesService } from '../core/services/flow-entities.service';
 @Directive({
   // eslint-disable-next-line @angular-eslint/directive-selector
   selector: '[connectionController]',
+  providers: [FlowStatusService, FlowEntitiesService],
 })
 export class ConnectionControllerDirective {
   public connectionMade = output<Connection>();

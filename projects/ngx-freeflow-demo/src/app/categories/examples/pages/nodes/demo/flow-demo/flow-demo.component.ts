@@ -1,24 +1,16 @@
 import { Component, computed, signal } from '@angular/core';
 import {
-  ContainerComponent,
   ContainerStyleSheetFn,
   FlowComponent,
   hasClasses,
-  HtmlBlockComponent,
   Node,
-  RootComponent,
   RootStyleSheetFn,
   uuid,
 } from 'ngx-freeflow-lib';
 
 @Component({
   selector: 'ffd-flow-demo',
-  imports: [
-    FlowComponent,
-    RootComponent,
-    ContainerComponent,
-    HtmlBlockComponent,
-  ],
+  imports: [FlowComponent],
   templateUrl: './flow-demo.component.html',
   styleUrl: './flow-demo.component.scss',
 })
@@ -26,13 +18,13 @@ export class FlowDemoComponent {
   public nodes: Node[] = [
     {
       id: uuid(),
-      type: 'custom',
-      position: { x: 10, y: 10 },
+      type: 'default',
+      point: { x: 10, y: 10 },
     },
     {
       id: uuid(),
-      type: 'custom',
-      position: { x: 100, y: 100 },
+      type: 'default',
+      point: { x: 100, y: 100 },
     },
   ];
 

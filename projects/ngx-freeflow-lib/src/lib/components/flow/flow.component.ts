@@ -7,7 +7,7 @@ import {
   input,
   OnChanges,
   SimpleChanges,
-  TemplateRef,
+  untracked,
   viewChild,
 } from '@angular/core';
 import { Node } from '../../core/interfaces/node.interface';
@@ -39,6 +39,16 @@ import { ViewportState } from '../../core/interfaces/viewport.interface';
 import { Point } from '../../core/interfaces/point.interface';
 import { EdgeModel } from '../../core/models/edge.model';
 import { addNodesToEdges } from '../../core/utils/add-nodes-to-edges';
+import { ConnectionComponent } from '../connection/connection.component';
+import { EdgeComponent } from '../edge/edge.component';
+import { DefsComponent } from '../defs/defs.component';
+import { ConnectionControllerDirective } from '../../directives/connection-controller.directive';
+import { SpacePointContextDirective } from '../../directives/space-point-context.directive';
+
+const connectionControllerHostDirective = {
+  directive: ConnectionControllerDirective,
+  outputs: ['connectionMade'],
+};
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -48,10 +58,20 @@ import { addNodesToEdges } from '../../core/utils/add-nodes-to-edges';
     NodeComponent,
     RootSvgReferenceDirective,
     RootSvgContextDirective,
+    SpacePointContextDirective,
+    ConnectionComponent,
+    EdgeComponent,
+    DefsComponent,
   ],
   templateUrl: './flow.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ZoomService, DraggableService],
+  providers: [
+    ZoomService,
+    DraggableService,
+    FlowEntitiesService,
+    ViewportService,
+  ],
+  hostDirectives: [connectionControllerHostDirective],
 })
 export class FlowComponent implements OnChanges {
   protected zoomService = inject(ZoomService);
@@ -118,7 +138,7 @@ export class FlowComponent implements OnChanges {
       const newNodes = this.nodes();
       const newModels = ReferenceKeeper.nodes(
         newNodes,
-        this.flowEntitiesService.nodes()
+        untracked(() => this.flowEntitiesService.nodes())
       );
       this.flowEntitiesService.nodes.set(newModels);
     });
@@ -127,7 +147,7 @@ export class FlowComponent implements OnChanges {
       const newEdges = this.edges();
       const newModels = ReferenceKeeper.edges(
         newEdges,
-        this.flowEntitiesService.edges()
+        untracked(() => this.flowEntitiesService.edges())
       );
       this.flowEntitiesService.edges.set(newModels);
     });
