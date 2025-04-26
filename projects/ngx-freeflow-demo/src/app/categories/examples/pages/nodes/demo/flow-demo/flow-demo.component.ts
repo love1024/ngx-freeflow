@@ -1,10 +1,11 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, Signal, signal } from '@angular/core';
 import {
   ContainerStyleSheetFn,
   FlowComponent,
   hasClasses,
   Node,
   RootStyleSheetFn,
+  UISnapshot,
   uuid,
 } from 'ngx-freeflow-lib';
 
@@ -35,7 +36,7 @@ const root: RootStyleSheetFn = () => ({
   width: signal(200),
 });
 
-const container: ContainerStyleSheetFn = snapshot => ({
+const container: ContainerStyleSheetFn = (snapshot: Signal<UISnapshot>) => ({
   width: signal(180),
   borderRadius: signal(5),
   backgroundColor: signal('rgb(30 30 30)'),

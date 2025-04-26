@@ -32,7 +32,7 @@ import { NgTemplateOutlet } from '@angular/common';
   `,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [FlowStatusService],
+  providers: [],
 })
 export class ConnectionComponent {
   model = input.required<ConnectionModel>();

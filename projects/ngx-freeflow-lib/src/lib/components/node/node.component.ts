@@ -28,7 +28,18 @@ export type HandleState = 'valid' | 'invalid' | 'idle';
   selector: 'g[node]',
   imports: [NgTemplateOutlet],
   templateUrl: './node.component.html',
-  providers: [FlowStatusService, FlowEntitiesService],
+  styles: [
+    `
+      .wrapper {
+        width: max-content;
+      }
+
+      .magnet {
+        opacity: 0;
+      }
+    `,
+  ],
+  providers: [FlowEntitiesService],
 })
 export class NodeComponent implements OnInit, OnDestroy, AfterViewInit {
   nodeModel = input.required<NodeModel>();
