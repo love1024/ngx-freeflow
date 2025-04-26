@@ -44,6 +44,7 @@ import { EdgeComponent } from '../edge/edge.component';
 import { DefsComponent } from '../defs/defs.component';
 import { ConnectionControllerDirective } from '../../directives/connection-controller.directive';
 import { SpacePointContextDirective } from '../../directives/space-point-context.directive';
+import { FlowStatusService } from '../../core/services/flow-status.service';
 
 const connectionControllerHostDirective = {
   directive: ConnectionControllerDirective,
@@ -70,6 +71,7 @@ const connectionControllerHostDirective = {
     DraggableService,
     FlowEntitiesService,
     ViewportService,
+    FlowStatusService,
   ],
   hostDirectives: [connectionControllerHostDirective],
 })
@@ -81,9 +83,13 @@ export class FlowComponent implements OnChanges {
   maxZoom = input(3);
   handlePositions = input<HandlePositions>();
   background = input<string>('#ffffff');
-  connection = input<ConnectionModel, ConnectionSettings>(undefined, {
-    transform: (settings: ConnectionSettings) => new ConnectionModel(settings),
-  });
+  connection = input<ConnectionModel, ConnectionSettings>(
+    new ConnectionModel({}),
+    {
+      transform: (settings: ConnectionSettings) =>
+        new ConnectionModel(settings),
+    }
+  );
   nodes = input.required<Node[]>();
   edges = input<Edge[]>([]);
 
@@ -140,6 +146,7 @@ export class FlowComponent implements OnChanges {
         newNodes,
         untracked(() => this.flowEntitiesService.nodes())
       );
+
       this.flowEntitiesService.nodes.set(newModels);
     });
 
@@ -150,11 +157,13 @@ export class FlowComponent implements OnChanges {
         untracked(() => this.flowEntitiesService.edges())
       );
       this.flowEntitiesService.edges.set(newModels);
+      addNodesToEdges(this.nodeModels, this.edgeModels);
     });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['nodes']) bindFlowToNodes(this.flowModel, this.nodeModels);
+
     addNodesToEdges(this.nodeModels, this.edgeModels);
   }
 

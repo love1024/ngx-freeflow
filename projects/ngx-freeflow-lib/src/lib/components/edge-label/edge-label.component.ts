@@ -13,10 +13,12 @@ import {
 import { EdgeLabelModel } from '../../core/models/edge-label.model';
 import { EdgeModel } from '../../core/models/edge.model';
 import { Point } from '../../core/interfaces/point.interface';
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'g[edgeLabel]',
+  imports: [NgTemplateOutlet],
   templateUrl: './edge-label.component.html',
   styles: [
     `

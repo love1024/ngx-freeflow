@@ -38,6 +38,9 @@ export type FlowStatus =
 
 @Injectable()
 export class FlowStatusService {
+  constructor() {
+    console.log('FlowStatusService initialized');
+  }
   public readonly status = signal<FlowStatus>({
     state: 'idle',
     payload: null,
@@ -89,6 +92,6 @@ export function batchStatusChanges(...changes: (() => void)[]) {
   if (changes.length) {
     const [firstChange, ...restChanges] = changes;
     firstChange();
-    restChanges.forEach(change => change());
+    restChanges.forEach(change => setTimeout(() => change()));
   }
 }

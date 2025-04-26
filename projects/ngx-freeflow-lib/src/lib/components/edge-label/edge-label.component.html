@@ -1,12 +1,12 @@
-@if (model().edgeLabel.type === 'html-template' && htmlTemplate()) {
+@let template = htmlTemplate();
+@if (model().edgeLabel.type === 'html-template' && template) {
   <svg:foreignObject
     [attr.x]="edgeLabelPoint().x"
     [attr.y]="edgeLabelPoint().y"
     [attr.width]="model().size().width"
     [attr.height]="model().size().height">
     <div #edgeLabelWrapper class="edge-label-wrapper">
-      <ng-container
-        *ngTemplateOutlet="htmlTemplate; context: getLabelContext()" />
+      <ng-container *ngTemplateOutlet="template; context: getLabelContext()" />
     </div>
   </svg:foreignObject>
 }

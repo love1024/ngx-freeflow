@@ -17,7 +17,7 @@ import { NgTemplateOutlet } from '@angular/common';
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'g[connection]',
-  imports: [SpacePointContextDirective, NgTemplateOutlet],
+  imports: [NgTemplateOutlet],
   template: `
     @let templateRef = template();
     @if (model().type === 'default' && path()) {

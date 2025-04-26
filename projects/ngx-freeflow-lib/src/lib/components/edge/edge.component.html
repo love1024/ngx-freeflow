@@ -7,9 +7,10 @@
     fill="none" />
 }
 
-@if (model().type === 'template' && edgeTemplate()) {
+@let edgeTempl = edgeTemplate();
+@if (model().type === 'template' && edgeTempl) {
   <ng-container
-    *ngTemplateOutlet="edgeTemplate; context: getContext()"></ng-container>
+    *ngTemplateOutlet="edgeTempl; context: getContext()"></ng-container>
 }
 
 @if (model().edgeLabels.start; as label) {

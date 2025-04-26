@@ -39,7 +39,7 @@ export type HandleState = 'valid' | 'invalid' | 'idle';
       }
     `,
   ],
-  providers: [FlowEntitiesService],
+  providers: [],
 })
 export class NodeComponent implements OnInit, OnDestroy, AfterViewInit {
   nodeModel = input.required<NodeModel>();

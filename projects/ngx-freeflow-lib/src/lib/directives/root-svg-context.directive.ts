@@ -7,7 +7,7 @@ import { FlowStatusService } from '../core/services/flow-status.service';
   host: {
     '(document:mouseup)': 'resetConnection()',
   },
-  providers: [FlowStatusService],
+  providers: [],
 })
 export class RootSvgContextDirective {
   private flowStatusService = inject(FlowStatusService);
