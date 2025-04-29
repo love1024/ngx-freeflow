@@ -28,17 +28,7 @@ export type HandleState = 'valid' | 'invalid' | 'idle';
   selector: 'g[node]',
   imports: [NgTemplateOutlet],
   templateUrl: './node.component.html',
-  styles: [
-    `
-      .wrapper {
-        width: max-content;
-      }
-
-      .magnet {
-        opacity: 0;
-      }
-    `,
-  ],
+  styleUrls: ['./node.component.scss'],
   providers: [],
 })
 export class NodeComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -58,6 +48,8 @@ export class NodeComponent implements OnInit, OnDestroy, AfterViewInit {
       this.flowStatusService.status().state === 'connection-start' ||
       this.flowStatusService.status().state === 'connection-validation'
   );
+
+  protected readonly defaultHandleStrokeWidth = 2;
 
   private sourceHanldeState = signal<HandleState>('idle');
   private targetHandleState = signal<HandleState>('idle');
@@ -192,5 +184,42 @@ export class NodeComponent implements OnInit, OnDestroy, AfterViewInit {
         state: this.targetHanldeStateReadonly,
       },
     };
+  }
+
+  private setSourceHandleSize() {
+    const sourceHandleRef = this.sourceHandleRef();
+    if (!sourceHandleRef) {
+      return;
+    }
+    // if handle template provided, we don't know its stroke so it's 0
+    const strokeWidth = this.handleTemplate()
+      ? 0
+      : 2 * this.defaultHandleStrokeWidth;
+
+    const sourceBox = sourceHandleRef.nativeElement.getBBox({
+      stroke: true,
+    });
+    this.nodeModel().sourceHandleSize.set({
+      width: sourceBox.width + strokeWidth,
+      height: sourceBox.height + strokeWidth,
+    });
+  }
+
+  private setTargetHandleSize() {
+    const targetHandleRef = this.targetHandleRef();
+    if (!targetHandleRef) {
+      return;
+    }
+    const strokeWidth = this.handleTemplate()
+      ? 0
+      : 2 * this.defaultHandleStrokeWidth;
+
+    const targetBox = targetHandleRef.nativeElement.getBBox({
+      stroke: true,
+    });
+    this.nodeModel().targetHandleSize.set({
+      width: targetBox.width + strokeWidth,
+      height: targetBox.height + strokeWidth,
+    });
   }
 }

@@ -24,7 +24,7 @@ import { NgTemplateOutlet } from '@angular/common';
       <svg:path
         [attr.d]="path()"
         [attr.marker-end]="markerUrl()"
-        stroke="black"
+        [attr.stroke]="defaultColor"
         fill="none" />
     } @else if (model().type === 'template' && templateRef) {
       <ng-container *ngTemplateOutlet="templateRef; context: getContext()" />
@@ -100,6 +100,8 @@ export class ConnectionComponent {
       },
     };
   }
+
+  protected readonly defaultColor = 'rgb(177, 177, 183)';
 
   private flowStatusService = inject(FlowStatusService);
   private spacePointContext = inject(SpacePointContextDirective);

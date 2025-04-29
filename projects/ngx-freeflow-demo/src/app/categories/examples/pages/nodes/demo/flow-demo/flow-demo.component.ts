@@ -1,6 +1,8 @@
 import { Component, computed, Signal, signal } from '@angular/core';
 import {
+  Connection,
   ContainerStyleSheetFn,
+  Edge,
   FlowComponent,
   hasClasses,
   Node,
@@ -18,18 +20,50 @@ import {
 export class FlowDemoComponent {
   public nodes: Node[] = [
     {
-      id: uuid(),
+      id: '1',
       type: 'default',
       point: { x: 10, y: 10 },
     },
     {
-      id: uuid(),
+      id: '2',
       type: 'default',
       point: { x: 100, y: 100 },
     },
   ];
 
+  public edges: Edge[] = [
+    {
+      id: uuid(),
+      source: '1',
+      target: '2',
+      markers: {
+        start: {
+          type: 'arrow-closed',
+        },
+        end: {
+          type: 'arrow',
+        },
+      },
+    },
+  ];
+
   public styles = { root, container };
+
+  public handleConnect(connection: Connection) {
+    this.edges = [
+      ...this.edges,
+      {
+        id: uuid(),
+        source: connection.source,
+        target: connection.target,
+        markers: {
+          end: {
+            type: 'arrow',
+          },
+        },
+      },
+    ];
+  }
 }
 
 const root: RootStyleSheetFn = () => ({

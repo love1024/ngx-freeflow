@@ -1,9 +1,12 @@
 @let htmlTeplate = nodeTemplate();
 @let handleHtmlTemplate = handleTemplate();
 
-@if (nodeModel().node.type === 'default') {
-  <svg:rect #nodeContent width="50" height="50" />
-} @else if (nodeModel().node.type === 'html-template' && htmlTeplate) {
+@let node = nodeModel().node;
+@if (node.type === 'default') {
+  <svg:foreignObject #nodeContent width="100" height="50">
+    <div class="default-node" [innerHTML]="node.text ?? ''"></div>
+  </svg:foreignObject>
+} @else if (node.type === 'html-template' && htmlTeplate) {
   <svg:foreignObject
     [attr.width]="nodeModel().size().width"
     [attr.height]="nodeModel().size().height">
@@ -38,19 +41,20 @@
     #sourceHandle
     [attr.cx]="nodeModel().sourceOffset().x"
     [attr.cy]="nodeModel().sourceOffset().y"
+    [attr.stroke-width]="defaultHandleStrokeWidth"
     r="5"
     stroke="white"
-    stroke-width="3"
-    fill="red"
+    fill="black"
     (mousedown)="startConnection($event)" />
 
   <svg:circle
     #targetHandle
     [attr.cx]="nodeModel().targetOffset().x"
     [attr.cy]="nodeModel().targetOffset().y"
+    [attr.stroke-width]="defaultHandleStrokeWidth"
     r="5"
     stroke="white"
-    fill="red"
+    fill="black"
     (mouseup)="endConnection()" />
 }
 

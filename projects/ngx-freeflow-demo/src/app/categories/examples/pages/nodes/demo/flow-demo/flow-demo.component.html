@@ -1,1 +1,6 @@
-<ff-flow [nodes]="nodes" [view]="[500, 500]"> </ff-flow>
+<ff-flow
+  [nodes]="nodes"
+  [edges]="edges"
+  [view]="[500, 500]"
+  (connectionMade)="handleConnect($event)">
+</ff-flow>

@@ -7,8 +7,6 @@ export class NodeModel<T = unknown> {
 
   public size = signal({ width: 0, height: 0 });
 
-  public data?: T;
-
   public pointTransform = computed(
     () => `translate(${this.point().x}, ${this.point().y})`
   );

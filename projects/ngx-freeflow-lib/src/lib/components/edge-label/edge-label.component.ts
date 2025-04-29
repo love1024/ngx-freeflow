@@ -24,6 +24,9 @@ import { NgTemplateOutlet } from '@angular/common';
     `
       .edge-label-wrapper {
         width: max-content;
+
+        margin-top: 1px;
+        margin-left: 1px;
       }
     `,
   ],
@@ -65,8 +68,17 @@ export class EdgeLabelComponent implements AfterViewInit {
       if (!edgeLabelRef) {
         return;
       }
-      const width = edgeLabelRef.nativeElement.clientWidth;
-      const height = edgeLabelRef.nativeElement.clientHeight;
+
+      // this is a fix for visual artifact in chrome that for some reason adresses only for edge label.
+      // the bug reproduces if edgeLabelWrapperRef size fully matched the size of parent foreignObject
+      const MAGIC_VALUE_TO_FIX_GLITCH_IN_CHROME = 2;
+
+      const width =
+        edgeLabelRef.nativeElement.clientWidth +
+        MAGIC_VALUE_TO_FIX_GLITCH_IN_CHROME;
+      const height =
+        edgeLabelRef.nativeElement.clientHeight +
+        MAGIC_VALUE_TO_FIX_GLITCH_IN_CHROME;
 
       this.model().size.set({ width, height });
     });

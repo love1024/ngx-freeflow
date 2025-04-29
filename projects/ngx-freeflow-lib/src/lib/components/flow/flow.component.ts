@@ -65,6 +65,7 @@ const connectionControllerHostDirective = {
     DefsComponent,
   ],
   templateUrl: './flow.component.html',
+  styleUrls: ['./flow.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     ZoomService,

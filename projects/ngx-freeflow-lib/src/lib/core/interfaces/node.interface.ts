@@ -1,8 +1,16 @@
 import { Point } from './point.interface';
 
-export interface Node<T = unknown> {
-  id: string;
-  point: Point;
-  type: 'default' | 'html-template';
+interface DefaultNode {
+  type: 'default';
+  text?: string;
+}
+
+interface HtmlTemplateNode<T = unknown> {
+  type: 'html-template';
   data?: T;
 }
+
+export type Node<T = unknown> = {
+  id: string;
+  point: Point;
+} & (DefaultNode | HtmlTemplateNode<T>);
