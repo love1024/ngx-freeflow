@@ -1,11 +1,14 @@
 import { computed, signal } from '@angular/core';
 import { Node } from '../interfaces/node.interface';
 import { FlowModel } from './flow.model';
+import { isDefined } from '../utils/is-defined';
 
 export class NodeModel<T = unknown> {
   public point = signal({ x: 0, y: 0 });
 
   public size = signal({ width: 0, height: 0 });
+
+  public draggable = true;
 
   public pointTransform = computed(
     () => `translate(${this.point().x}, ${this.point().y})`
@@ -113,6 +116,10 @@ export class NodeModel<T = unknown> {
   private flow?: FlowModel;
   constructor(public node: Node<T>) {
     this.point.set(node.point);
+
+    if (isDefined(node.draggable)) {
+      this.draggable = node.draggable;
+    }
   }
 
   public setFlow(flow: FlowModel) {

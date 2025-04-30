@@ -10,7 +10,11 @@ interface HtmlTemplateNode<T = unknown> {
   data?: T;
 }
 
-export type Node<T = unknown> = {
+interface SharedNode {
   id: string;
   point: Point;
-} & (DefaultNode | HtmlTemplateNode<T>);
+  draggable?: boolean;
+}
+
+export type Node<T = unknown> = SharedNode &
+  (DefaultNode | HtmlTemplateNode<T>);

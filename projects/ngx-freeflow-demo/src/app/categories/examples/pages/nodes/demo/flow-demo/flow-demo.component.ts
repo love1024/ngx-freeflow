@@ -23,11 +23,14 @@ export class FlowDemoComponent {
       id: '1',
       type: 'default',
       point: { x: 10, y: 10 },
+      text: '1',
+      draggable: false,
     },
     {
       id: '2',
       type: 'default',
       point: { x: 100, y: 100 },
+      text: '2',
     },
   ];
 

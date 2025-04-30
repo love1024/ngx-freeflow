@@ -63,7 +63,7 @@ export class NodeComponent implements OnInit, OnDestroy, AfterViewInit {
   private flowEntitiesService = inject(FlowEntitiesService);
 
   ngOnInit() {
-    this.draggableService.makeDraggable(
+    this.draggableService.toggleDraggable(
       this.hostRef.nativeElement,
       this.nodeModel()
     );
