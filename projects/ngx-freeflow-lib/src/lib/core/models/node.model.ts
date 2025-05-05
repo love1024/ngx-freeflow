@@ -2,9 +2,12 @@ import { computed, signal } from '@angular/core';
 import { Node } from '../interfaces/node.interface';
 import { FlowModel } from './flow.model';
 import { isDefined } from '../utils/is-defined';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 export class NodeModel<T = unknown> {
   public point = signal({ x: 0, y: 0 });
+
+  public points$ = toObservable(this.point);
 
   public size = signal({ width: 0, height: 0 });
 
@@ -15,10 +18,10 @@ export class NodeModel<T = unknown> {
   );
 
   public sourcePosition = computed(
-    () => this.flow?.handlePositions().source ?? 'left'
+    () => this.flow?.handlePositions()?.source ?? 'left'
   );
   public targetPosition = computed(
-    () => this.flow?.handlePositions().target ?? 'right'
+    () => this.flow?.handlePositions()?.target ?? 'right'
   );
 
   public sourceHandleSize = signal({ width: 0, height: 0 });

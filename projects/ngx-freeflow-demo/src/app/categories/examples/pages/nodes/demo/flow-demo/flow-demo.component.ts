@@ -1,11 +1,22 @@
-import { Component, computed, Signal, signal } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  computed,
+  inject,
+  Signal,
+  signal,
+  viewChild,
+  WritableSignal,
+} from '@angular/core';
 import {
   Connection,
   ContainerStyleSheetFn,
   Edge,
+  EdgeChange,
   FlowComponent,
   hasClasses,
   Node,
+  NodeChange,
   RootStyleSheetFn,
   UISnapshot,
   uuid,
@@ -18,6 +29,8 @@ import {
   styleUrl: './flow-demo.component.scss',
 })
 export class FlowDemoComponent {
+  public vflow = viewChild<FlowComponent>('flow');
+
   public nodes: Node[] = [
     {
       id: '1',
@@ -34,9 +47,9 @@ export class FlowDemoComponent {
     },
   ];
 
-  public edges: Edge[] = [
+  public edges: WritableSignal<Edge[]> = signal([
     {
-      id: uuid(),
+      id: '1',
       source: '1',
       target: '2',
       markers: {
@@ -48,24 +61,55 @@ export class FlowDemoComponent {
         },
       },
     },
-  ];
+  ]);
+
+  protected cd = inject(ChangeDetectorRef);
 
   public styles = { root, container };
 
   public handleConnect(connection: Connection) {
-    this.edges = [
-      ...this.edges,
-      {
-        id: uuid(),
-        source: connection.source,
-        target: connection.target,
-        markers: {
-          end: {
-            type: 'arrow',
+    this.edges.update(edges => {
+      return [
+        ...edges,
+        {
+          id: uuid(),
+          source: connection.source,
+          target: connection.target,
+          markers: {
+            end: {
+              type: 'arrow',
+            },
           },
         },
+      ];
+    });
+  }
+
+  public addNode() {
+    this.nodes = [
+      ...this.nodes,
+      {
+        id: uuid(),
+        point: { x: 200, y: 200 },
+        type: 'default',
       },
     ];
+  }
+
+  public removeNode() {
+    this.nodes = this.nodes.filter(n => n.id !== '1');
+  }
+
+  public removeEdge() {
+    this.edges.update(edges => edges.filter(e => e.id !== '1'));
+  }
+
+  public handleEdgesChange(changes: EdgeChange[]) {
+    console.log(changes);
+  }
+
+  public handleNodesChange(changes: NodeChange[]) {
+    console.log(changes);
   }
 }
 

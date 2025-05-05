@@ -30,3 +30,7 @@ export * from './lib/directives/reference.directive';
 export * from './lib/directives/root-svg-context.directive';
 export * from './lib/directives/space-point-context.directive';
 export * from './lib/directives/template.directive';
+export * from './lib/directives/changes-controller.directive';
+
+export * from './lib/core/types/edge-change.type';
+export * from './lib/core/types/node-change.type';

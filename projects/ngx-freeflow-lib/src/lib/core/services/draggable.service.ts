@@ -43,7 +43,7 @@ export class DraggableService {
    */
   private getIgnoreDragBehavior() {
     return drag().on('drag', (event: DragEvent) => {
-      (event as Event).stopPropagation();
+      (event as Event)?.stopPropagation();
     });
   }
 }
