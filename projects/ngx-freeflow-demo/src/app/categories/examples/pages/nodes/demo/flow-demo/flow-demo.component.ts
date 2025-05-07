@@ -1,24 +1,18 @@
 import {
   ChangeDetectorRef,
   Component,
-  computed,
   inject,
-  Signal,
   signal,
   viewChild,
   WritableSignal,
 } from '@angular/core';
 import {
   Connection,
-  ContainerStyleSheetFn,
   Edge,
   EdgeChange,
   FlowComponent,
-  hasClasses,
   Node,
   NodeChange,
-  RootStyleSheetFn,
-  UISnapshot,
   uuid,
 } from 'ngx-freeflow-lib';
 
@@ -65,8 +59,6 @@ export class FlowDemoComponent {
 
   protected cd = inject(ChangeDetectorRef);
 
-  public styles = { root, container };
-
   public handleConnect(connection: Connection) {
     this.edges.update(edges => {
       return [
@@ -112,26 +104,3 @@ export class FlowDemoComponent {
     console.log(changes);
   }
 }
-
-const root: RootStyleSheetFn = () => ({
-  width: signal(200),
-});
-
-const container: ContainerStyleSheetFn = (snapshot: Signal<UISnapshot>) => ({
-  width: signal(180),
-  borderRadius: signal(5),
-  backgroundColor: signal('rgb(30 30 30)'),
-  marginBottom: signal(10),
-  boxShadow: computed(() => {
-    if (hasClasses(snapshot(), ':hover')) {
-      return {
-        hOffset: 3,
-        vOffset: 5,
-        blur: 3,
-        color: 'rgb(255 0 0 / 0.4)',
-      };
-    }
-
-    return null;
-  }),
-});

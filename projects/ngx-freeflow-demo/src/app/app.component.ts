@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { styles } from './app.styles';
+
 import {
   NgDocNavbarComponent,
   NgDocRootComponent,
@@ -22,7 +22,6 @@ import { routingAnimation } from './animations/routing.animation';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  svgStyles = styles;
   private contexts = inject(ChildrenOutletContexts);
 
   get routingAnimations() {
